@@ -10,39 +10,40 @@
     <meta http-equiv="Expires" content="0">
     
     <!-- Meta tags para SEO que serão preenchidas dinamicamente -->
-    <meta name="description" content="" id="meta-description">
-    <meta name="keywords" content="" id="meta-keywords">
+    <!-- ATENÇÃO: Preencha estas meta tags diretamente aqui ou remova se preferir que o JS as preencha com valores padrão -->
+    <meta name="description" content="Descubra o catálogo completo da Nina's Delícias, com bolos artesanais, doces finos e muito mais. Qualidade e sabor que encantam!" id="meta-description">
+    <meta name="keywords" content="Nina's Delícias, catálogo, bolos, doces, confeitaria, produtos artesanais" id="meta-keywords">
     <meta name="author" content="Sys2n - Sistemas Personalizados">
     
     <!-- Meta tags para compartilhamento em redes sociais (Open Graph) -->
-    <meta property="og:title" content="" id="og-title">
-    <meta property="og:description" content="" id="og-description">
-    <meta property="og:image" content="" id="og-image">
+    <meta property="og:title" content="Nina's Delícias - Catálogo Online" id="og-title">
+    <meta property="og:description" content="Sabor que encanta, qualidade que apaixona! Conheça nosso catálogo." id="og-description">
+    <meta property="og:image" content="https://placehold.co/1200x630/8B4513/FFFFFF?text=Nina's+Del%C3%ADcias" id="og-image"> <!-- URL da imagem para compartilhamento -->
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:url" content="" id="og-url">
+    <meta property="og:url" content="https://seusite.com.br/catalogo" id="og-url"> <!-- URL do seu catálogo -->
     <meta property="og:type" content="website">
     
     <!-- Meta tags para Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="" id="twitter-title">
-    <meta name="twitter:description" content="" id="twitter-description">
-    <meta name="twitter:image" content="" id="twitter-image">
+    <meta name="twitter:title" content="Nina's Delícias - Catálogo Online" id="twitter-title">
+    <meta name="twitter:description" content="Sabor que encanta, qualidade que apaixona! Conheça nosso catálogo." id="twitter-description">
+    <meta name="twitter:image" content="https://placehold.co/1200x630/8B4513/FFFFFF?text=Nina's+Del%C3%ADcias" id="twitter-image"> <!-- URL da imagem para Twitter -->
     
     <!-- Favicon (será preenchido dinamicamente) -->
-    <link rel="icon" href="" type="image/png">
+    <link rel="icon" href="https://placehold.co/32x32/8B4513/FFFFFF?text=N" type="image/png"> <!-- URL do seu Favicon -->
     
-    <title>Carregando Catálogo...</title>
+    <title>Nina's Delícias - Catálogo Online</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Variáveis CSS dinâmicas para cores da planilha */
+        /* Variáveis CSS para CORES DA EMPRESA (Hardcoded) */
         :root {
-            --cor-primaria: #8B4513; /* Cor padrão */
-            --cor-secundaria: #D2691E; /* Cor padrão */
-            --cor-fundo: #f8fafc; /* Cor padrão */
-            --cor-texto: #333333; /* Cor padrão */
-            --cor-links: #8B4513; /* Cor padrão */
-            --cor-texto-rodape: #ffffff; /* Cor padrão */
+            --cor-primaria: #8B4513; /* Personalize aqui a cor primária */
+            --cor-secundaria: #D2691E; /* Personalize aqui a cor secundária */
+            --cor-fundo: #f8fafc; /* Personalize aqui a cor de fundo */
+            --cor-texto: #333333; /* Personalize aqui a cor do texto principal */
+            --cor-links: #8B4513; /* Personalize aqui a cor dos links */
+            --cor-texto-rodape: #ffffff; /* Personalize aqui a cor do texto do rodapé */
         }
 
         /* Animações personalizadas */
@@ -298,10 +299,12 @@
                     <div class="w-8"></div> <!-- Espaçador -->
                     
                     <div class="flex justify-center flex-1">
-                        <img id="logo-mobile" src="" alt="Logo" 
-                             class="w-3/4 sm:w-2/3 h-auto max-h-16 sm:max-h-20 object-contain logo-hover hidden rounded-lg">
-                        <div id="logo-text-mobile" class="w-12 h-12 bg-primary-dynamic rounded-full flex items-center justify-center text-white font-bold text-lg">
-                            
+                        <!-- Logo Mobile (personalize o src e alt) -->
+                        <img id="logo-mobile" src="https://placehold.co/80x80/8B4513/FFFFFF?text=LOGO" alt="Logo Nina's Delícias" 
+                             class="w-3/4 sm:w-2/3 h-auto max-h-16 sm:max-h-20 object-contain logo-hover rounded-lg">
+                        <!-- Texto do Logo Mobile (exibido se não houver imagem) -->
+                        <div id="logo-text-mobile" class="w-12 h-12 bg-primary-dynamic rounded-full flex items-center justify-center text-white font-bold text-lg hidden">
+                            ND
                         </div>
                     </div>
                     
@@ -324,13 +327,16 @@
 
                     <!-- Logo e nome centralizados -->
                     <div class="flex items-center space-x-4 mx-auto">
-                        <img id="logo" src="" alt="Logo" class="h-20 w-20 md:h-24 md:w-24 object-cover logo-hover hidden">
+                        <!-- Logo Desktop (personalize o src e alt) -->
+                        <img id="logo" src="https://placehold.co/80x80/8B4513/FFFFFF?text=LOGO" alt="Logo Nina's Delícias" class="h-20 w-20 md:h-24 md:w-24 object-cover logo-hover">
                         <div class="flex flex-col">
+                            <!-- Nome da Empresa (personalize o texto) -->
                             <h1 id="nome-empresa" class="text-2xl md:text-3xl font-bold text-primary-dynamic leading-tight">
-                                Carregando...
+                                Nina's Delícias
                             </h1>
-                            <p id="slogan" class="text-sm md:text-base text-gray-600 hidden">
-                                Carregando...
+                            <!-- Slogan (personalize o texto) -->
+                            <p id="slogan" class="text-sm md:text-base text-gray-600">
+                                Sabor que encanta, qualidade que apaixona!
                             </p>
                         </div>
                     </div>
@@ -344,7 +350,7 @@
         <!-- Menu de Categorias (parte do cabeçalho unificado) -->
         <div id="mobile-category-menu" class="bg-white/95 backdrop-blur-sm border-b border-gray-100 py-3 shadow-md">
             <div id="category-scroll" class="category-scroll flex overflow-x-auto px-4 space-x-3 min-h-[52px] items-center md:justify-center justify-start">
-                <!-- Categorias serão inseridas dinamicamente aqui -->
+                <!-- Categorias serão inseridas dinamicamente aqui pelo JS -->
                 <!-- Placeholder para garantir que o menu tenha conteúdo mesmo antes do carregamento -->
                 <div class="flex-shrink-0 px-4 py-2 bg-gray-200 text-transparent rounded-full text-sm font-semibold whitespace-nowrap min-w-[80px] animate-pulse">Carregando...</div>
                 <div class="flex-shrink-0 px-4 py-2 bg-gray-200 text-transparent rounded-full text-sm font-semibold whitespace-nowrap min-w-[80px] animate-pulse">Carregando...</div>
@@ -357,22 +363,23 @@
     <main class="container mx-auto px-4 pt-28 pb-8">
         <!-- Catálogo -->
         <div id="cardapio" class="space-y-12">
-            <!-- Categorias serão inseridas aqui dinamicamente -->
+            <!-- Categorias e itens serão inseridos aqui dinamicamente pelo JS -->
         </div>
 
-        <!-- Seção de Avaliação -->
-        <div id="avaliacao-section" class="mt-16 text-center" style="display: none;">
+        <!-- Seção de Avaliação (Personalize o link e visibilidade) -->
+        <div id="avaliacao-section" class="mt-16 text-center">
             <div class="bg-white rounded-3xl p-8 shadow-xl max-w-2xl mx-auto fade-in">
                 <div class="mb-6">
                     <div class="text-6xl mb-4">⭐</div>
                     <h3 class="text-2xl font-bold text-gray-800 mb-3">Gostou do nosso atendimento?</h3>
                     <p class="text-gray-600 text-lg">Sua opinião é muito importante para nós!</p>
                 </div>
-                <a id="btn-avaliar" href="#" target="_blank" style="display: none;"
+                <!-- Link para avaliação (personalize o href) -->
+                <a id="btn-avaliar" href="https://g.page/r/CdfL6w2V3W2GEBM/review" target="_blank" 
                    class="inline-flex items-center px-8 py-4 bg-primary-dynamic text-white rounded-2xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg font-semibold">
                     <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.54-1.118l1.07-3.292a1 1 0 00-.364-1.118L3.24 8.71c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path>
-                    </svg>
+                        </svg>
                     Avaliar no Google
                 </a>
                 <p id="avaliacao-message" class="mt-4 text-gray-600 text-sm"></p>
@@ -387,10 +394,10 @@
         </svg>
     </button>
 
-    <!-- Rodapé -->
+    <!-- Rodapé (Personalize o texto e o link do desenvolvedor) -->
     <footer class="bg-primary-dynamic py-8 text-center text-rodape-dynamic text-sm">
         <div class="container mx-auto px-4">
-            <p>&copy; 2024 <span id="footer-empresa">Carregando...</span></p>
+            <p>&copy; 2024 <span id="footer-empresa">Nina's Delícias</span></p>
             <p class="mt-1">Desenvolvido por <a href="https://www.sys2n.com.br" target="_blank" class="link-color-dynamic hover:underline">Sys2n - Sistemas Personalizados</a></p>
         </div>
     </footer>
@@ -399,7 +406,19 @@
     <script>
         // Variáveis globais
         let dadosCatalogo = {};
-        let configuracoesGlobais = {};
+        // As configurações da empresa agora são estáticas no HTML/CSS
+        const EMPRESA_CONFIG = {
+            nomeEmpresa: "Nina's Delícias", // Personalize
+            sloganEmpresa: "Sabor que encanta, qualidade que apaixona!", // Personalize
+            logoUrl: "https://placehold.co/80x80/8B4513/FFFFFF?text=LOGO", // Personalize
+            logoMobileUrl: "https://placehold.co/80x80/8B4513/FFFFFF?text=LOGO", // Personalize (ou deixe igual a logoUrl)
+            moeda: "R$", // Personalize
+            exibirAvaliacao: true, // Personalize (true/false)
+            googleMeuNegocioUrl: "https://g.page/r/CdfL6w2V3W2GEBM/review", // Personalize seu link de avaliação
+            // Cores são definidas diretamente no CSS :root
+            // Meta tags são definidas diretamente no <head>
+        };
+
         let categoriasAtivas = []; // Para controlo de categorias no menu
         let currentScrollTimeout; // Para debounce do scroll
 
@@ -427,76 +446,59 @@
         const backToTopButton = document.getElementById('back-to-top');
         const footerEmpresa = document.getElementById('footer-empresa');
 
-        // Função para aplicar as configurações globais (cores, textos, SEO)
-        function aplicarConfiguracoesGlobais() {
-            // Cores
-            document.documentElement.style.setProperty('--cor-primaria', configuracoesGlobais.corPrimaria || '#8B4513');
-            document.documentElement.style.setProperty('--cor-secundaria', configuracoesGlobais.corSecundaria || '#D2691E');
-            document.documentElement.style.setProperty('--cor-fundo', configuracoesGlobais.corFundo || '#f8fafc');
-            document.documentElement.style.setProperty('--cor-texto', configuracoesGlobais.corTexto || '#333333');
-            document.documentElement.style.setProperty('--cor-links', configuracoesGlobais.corLinks || '#8B4513');
-            document.documentElement.style.setProperty('--cor-texto-rodape', configuracoesGlobais.corTextoRodape || '#ffffff');
+        // A função aplicarConfiguracoesGlobais foi removida/simplificada, pois as configurações são estáticas
+        // Apenas ajustamos elementos que podem ter fallback ou lógica de visibilidade
+        function aplicarConfiguracoesIniciais() {
+            document.title = EMPRESA_CONFIG.tituloPaginaIdioma || EMPRESA_CONFIG.nomeEmpresa || 'Catálogo Online';
+            nomeEmpresaHeader.textContent = EMPRESA_CONFIG.nomeEmpresa;
+            footerEmpresa.textContent = EMPRESA_CONFIG.nomeEmpresa;
 
-            // Textos e Imagens
-            document.title = configuracoesGlobais.tituloPaginaIdioma || configuracoesGlobais.nomeEmpresa || 'Catálogo Online';
-            nomeEmpresaHeader.textContent = configuracoesGlobais.nomeEmpresa || 'Nome da Empresa';
-            footerEmpresa.textContent = configuracoesGlobais.nomeEmpresa || 'Nome da Empresa';
-
-            if (configuracoesGlobais.sloganEmpresa) {
-                sloganHeader.textContent = configuracoesGlobais.sloganEmpresa;
+            if (EMPRESA_CONFIG.sloganEmpresa) {
+                sloganHeader.textContent = EMPRESA_CONFIG.sloganEmpresa;
                 sloganHeader.classList.remove('hidden');
             } else {
                 sloganHeader.classList.add('hidden');
             }
 
             // Lógica para Logo (imagem vs. texto)
-            const logoUrl = configuracoesGlobais.logoUrl && configuracoesGlobais.logoUrl !== 'N/A' ? configuracoesGlobais.logoUrl : '';
-            const logoMobileUrl = configuracoesGlobais.logoMobileUrl && configuracoesGlobais.logoMobileUrl !== 'N/A' ? configuracoesGlobais.logoMobileUrl : logoUrl;
-
-            if (logoMobileUrl) {
-                logoMobile.src = logoMobileUrl;
-                logoMobile.alt = `Logo ${configuracoesGlobais.nomeEmpresa || ''}`;
+            const logoMobileSrc = EMPRESA_CONFIG.logoMobileUrl && EMPRESA_CONFIG.logoMobileUrl !== 'N/A' ? EMPRESA_CONFIG.logoMobileUrl : EMPRESA_CONFIG.logoUrl;
+            if (logoMobileSrc && logoMobileSrc !== 'N/A') {
+                logoMobile.src = logoMobileSrc;
+                logoMobile.alt = `Logo ${EMPRESA_CONFIG.nomeEmpresa}`;
                 logoMobile.classList.remove('hidden');
                 logoTextMobile.classList.add('hidden');
             } else {
-                const nomeParaLogoTexto = configuracoesGlobais.nomeEmpresa || ''; 
+                const nomeParaLogoTexto = EMPRESA_CONFIG.nomeEmpresa || ''; 
                 logoMobile.classList.add('hidden');
                 logoTextMobile.textContent = nomeParaLogoTexto.split(' ').map(n => n[0]).join('');
                 logoTextMobile.classList.remove('hidden');
             }
 
-            if (logoUrl) {
-                logoDesktop.src = logoUrl;
-                logoDesktop.alt = `Logo ${configuracoesGlobais.nomeEmpresa || ''}`;
+            const logoDesktopSrc = EMPRESA_CONFIG.logoUrl && EMPRESA_CONFIG.logoUrl !== 'N/A' ? EMPRESA_CONFIG.logoUrl : '';
+            if (logoDesktopSrc) {
+                logoDesktop.src = logoDesktopSrc;
+                logoDesktop.alt = `Logo ${EMPRESA_CONFIG.nomeEmpresa}`;
                 logoDesktop.classList.remove('hidden');
             } else {
                 logoDesktop.classList.add('hidden');
             }
 
-            // Favicon
-            const favicon = document.querySelector("link[rel='icon']");
-            if (favicon && configuracoesGlobais.faviconUrl && configuracoesGlobais.faviconUrl !== 'N/A') {
-                favicon.href = configuracoesGlobais.faviconUrl;
+            // Seção de Avaliação
+            if (EMPRESA_CONFIG.exibirAvaliacao && EMPRESA_CONFIG.googleMeuNegocioUrl && EMPRESA_CONFIG.googleMeuNegocioUrl !== 'N/A') {
+                btnAvaliar.href = EMPRESA_CONFIG.googleMeuNegocioUrl;
+                avaliacaoSection.style.display = 'block';
+            } else {
+                avaliacaoSection.style.display = 'none';
             }
-
-            // Meta Tags para SEO e Compartilhamento
-            document.getElementById('meta-description').content = configuracoesGlobais.metaDescription || '';
-            document.getElementById('meta-keywords').content = configuracoesGlobais.metaKeywords || '';
-            document.getElementById('og-title').content = configuracoesGlobais.ogTitle || configuracoesGlobais.nomeEmpresa || '';
-            document.getElementById('og-description').content = configuracoesGlobais.ogDescription || configuracoesGlobais.sloganEmpresa || '';
-            document.getElementById('og-image').content = configuracoesGlobais.ogImageUrl || configuracoesGlobais.logoUrl || '';
-            document.getElementById('og-url').content = configuracoesGlobais.ogUrl || window.location.href;
-            document.getElementById('twitter-title').content = configuracoesGlobais.twitterTitle || configuracoesGlobais.ogTitle || configuracoesGlobais.nomeEmpresa || '';
-            document.getElementById('twitter-description').content = configuracoesGlobais.twitterDescription || configuracoesGlobais.ogDescription || '';
-            document.getElementById('twitter-image').content = configuracoesGlobais.twitterImageUrl || configuracoesGlobais.ogImageUrl || '';
         }
+
 
         // Função para carregar dados do catálogo (agora de um Google Apps Script)
         async function carregarDadosCatalogo() {
             // URL do seu Google Apps Script publicado como Aplicativo Web
             // MUITO IMPORTANTE: Substitua este URL pelo SEU REAL URL do Apps Script.
-            // Exemplo: 'https://script.google.com/macros/s/AKfycbz_YOUR_SCRIPT_ID_HERE/exec';
-            const APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwTLUSK12uSH6Va-Se_IOwpzUGgjnHU3OcXcf3_hYE0jp6oYaNdg4JL2CNBKAxQjyls/exec'; 
+            // Esta linha está aproximadamente na linha 501 do código.
+            const APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwJ7yJ5kYJRalHIZ7LWXAysjPuAXK1tkLgqUrRVP2TsGhN2y1omuCsN8X_8D9q21EUj/exec'; 
 
             try {
                 const response = await fetch(APPS_SCRIPT_WEB_APP_URL);
@@ -509,29 +511,16 @@
                 if (dadosRecebidos.error) {
                     throw new Error(`Erro do Apps Script: ${dadosRecebidos.error}`);
                 }
-                if (!dadosRecebidos.configuracoes || !dadosRecebidos.categorias) {
-                    throw new Error("Estrutura de dados inválida recebida do Apps Script. Verifique os nomes dos cabeçalhos na sua planilha.");
+                // Agora esperamos apenas 'categorias' diretamente, não 'configuracoes'
+                if (!dadosRecebidos.categorias) {
+                    throw new Error("Estrutura de dados inválida recebida do Apps Script. Esperava 'categorias'.");
                 }
 
-                dadosCatalogo = dadosRecebidos;
-                configuracoesGlobais = dadosRecebidos.configuracoes;
-
-                // Aplica as configurações globais
-                aplicarConfiguracoesGlobais();
+                dadosCatalogo = dadosRecebidos; // dadosCatalogo agora só tem 'categorias'
 
                 // Renderiza o cardápio e os menus
                 renderizarCategoriasMenu(dadosCatalogo.categorias);
                 renderizarCardapio(dadosCatalogo.categorias);
-
-                // Exibe a seção de avaliação se configurado
-                // A propriedade 'exibirAvaliacao' deve ser um booleano (TRUE/FALSE) na planilha
-                if (configuracoesGlobais.exibirAvaliacao && configuracoesGlobais.googleMeuNegocioUrl && configuracoesGlobais.googleMeuNegocioUrl !== 'N/A') {
-                    btnAvaliar.href = configuracoesGlobais.googleMeuNegocioUrl; // Usando Google Meu Negócio URL para avaliação
-                    btnAvaliar.style.display = 'inline-flex'; // Exibe o botão
-                    avaliacaoSection.style.display = 'block';
-                } else {
-                    avaliacaoSection.style.display = 'none'; // Oculta se não houver link ou não estiver configurado
-                }
 
             } catch (error) {
                 console.error("Erro ao carregar dados do catálogo:", error);
@@ -541,11 +530,10 @@
                         <strong class="font-bold">Erro ao carregar o catálogo!</strong>
                         <span class="block sm:inline"> Por favor, verifique os seguintes pontos:</span>
                         <ul class="list-disc list-inside text-left mx-auto max-w-md mt-2">
-                            <li>O URL do Google Apps Script na linha 703 do HTML está correto?</li>
+                            <li>O URL do Google Apps Script (aproximadamente linha 501 do HTML) está correto?</li>
                             <li>O Apps Script foi publicado como 'Aplicativo Web' com acesso 'Qualquer pessoa'?</li>
                             <li>O ID da planilha no Apps Script está correto?</li>
-                            <li>Os nomes dos separadores ('Config', 'Categorias', 'Itens') na sua planilha estão corretos?</li>
-                            <li>As colunas na aba 'Config' (ex: 'Nome da Empresa', 'Cor Primária') estão preenchidas corretamente?</li>
+                            <li>Os nomes dos separadores ('Categorias', 'Itens') na sua planilha estão corretos?</li>
                         </ul>
                         <p class="text-sm mt-3">Detalhes técnicos: ${error.message}</p>
                     </div>
@@ -578,7 +566,7 @@
             categoryScrollContainer.appendChild(allCategoryItem);
 
             // Filtra e ordena categorias ativas
-            const categoriasAtivasOrdenadas = dadosCatalogo.categorias
+            const categoriasAtivasOrdenadas = categorias
                 .filter(cat => cat.ativa)
                 .sort((a, b) => (a.ordemExibicao || 9999) - (b.ordemExibicao || 9999)); // Garante que categorias sem ordem vão para o fim
 
@@ -634,7 +622,7 @@
                                     <div class="p-4 flex flex-col flex-grow menu-item-content">
                                         <div class="menu-item-title-price mb-2">
                                             <h3 class="text-lg font-semibold text-gray-800 leading-tight">${item.nome}</h3>
-                                            <span class="text-xl font-bold text-secondary-dynamic">${configuracoesGlobais.moeda || 'R$'} ${item.preco.toFixed(2).replace('.', ',')}</span>
+                                            <span class="text-xl font-bold text-secondary-dynamic">${EMPRESA_CONFIG.moeda} ${item.preco.toFixed(2).replace('.', ',')}</span>
                                         </div>
                                         ${item.descricao ? `<p class="text-gray-600 text-sm flex-grow">${item.descricao}</p>` : ''}
                                         ${item.observacoes ? `<p class="text-gray-500 text-xs mt-2">${item.observacoes}</p>` : ''}
@@ -683,7 +671,7 @@
                         <h4 class="font-semibold text-gray-800">${highlightText(item.nome, termoLowerCase)}</h4>
                         <p class="text-sm text-gray-600">${highlightText(item.descricao || '', termoLowerCase)}</p>
                         <p class="text-xs text-gray-500 mt-1">Categoria: ${highlightText(item.categoriaNome, termoLowerCase)}</p>
-                        <span class="text-lg font-bold text-secondary-dynamic">${configuracoesGlobais.moeda || 'R$'} ${item.preco.toFixed(2).replace('.', ',')}</span>
+                        <span class="text-lg font-bold text-secondary-dynamic">${EMPRESA_CONFIG.moeda} ${item.preco.toFixed(2).replace('.', ',')}</span>
                     `;
                     searchItemDiv.onclick = () => {
                         scrollToCategory(item.categoriaId); // Rola para a categoria do item
@@ -831,7 +819,8 @@
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
-            carregarDadosCatalogo();
+            aplicarConfiguracoesIniciais(); // Aplica as configurações hardcoded
+            carregarDadosCatalogo(); // Carrega apenas categorias e itens
         });
     </script>
 </body>
