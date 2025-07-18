@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Meta tags para prevenir cache -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <!-- Meta tags para SEO que serão preenchidas dinamicamente -->
+    <meta name="description" content="" id="meta-description">
+    <meta name="keywords" content="" id="meta-keywords">
+    <meta name="author" content="Sys2n - Sistemas Personalizados">
+    
+    <!-- Meta tags para compartilhamento em redes sociais (Open Graph) -->
+    <meta property="og:title" content="" id="og-title">
+    <meta property="og:description" content="" id="og-description">
+    <meta property="og:image" content="" id="og-image">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="" id="og-url">
+    <meta property="og:type" content="website">
+    
+    <!-- Meta tags para Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="" id="twitter-title">
+    <meta name="twitter:description" content="" id="twitter-description">
+    <meta name="twitter:image" content="" id="twitter-image">
+    
+    <!-- Favicon (será preenchido dinamicamente) -->
+    <link rel="icon" href="" type="image/png">
+    
+    <title>Carregando Catálogo...</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Variáveis CSS dinâmicas para cores da planilha */
+        :root {
+            --cor-primaria: #8B4513; /* Cor padrão */
+            --cor-secundaria: #D2691E; /* Cor padrão */
+            --cor-fundo: #f8fafc; /* Cor padrão */
+            --cor-texto: #333333; /* Cor padrão */
+            --cor-links: #8B4513; /* Cor padrão */
+            --cor-texto-rodape: #ffffff; /* Cor padrão */
+        }
+
+        /* Animações personalizadas */
+        .menu-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .logo-hover {
+            transition: transform 0.2s ease-in-out;
+        }
+        
+        .logo-hover:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Loading animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        /* Gradientes dinâmicos */
+        .gradient-bg {
+            background: var(--cor-fundo);
+        }
+        
+        /* Cards com hover effect - Design atualizado */
+        .card-hover {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Estilos para o novo design de cards */
+        .menu-item-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .menu-item-row {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            height: 100%;
+        }
+        
+        .menu-item-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
+            min-width: 0; /* Para evitar overflow de texto */
+        }
+        
+        .menu-item-title-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .menu-item-image-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.75rem;
+        }
+        
+        .menu-item-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* Animação do preço */
+        .price-highlight {
+            transition: all 0.2s ease;
+        }
+        
+        .price-highlight:hover {
+            transform: scale(1.02);
+        }
+
+        /* Scroll horizontal estilo iFood com cores dinâmicas */
+        .category-scroll {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .category-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .category-item {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .category-item.active {
+            background-color: var(--cor-primaria) !important;
+            color: white !important;
+            /* Removido: sombra e efeitos de escala/translação */
+        }
+        
+        .category-item.centered-item {
+            position: relative;
+            /* Removida a posição relativa que era usada para a bolinha */
+        }
+
+        /* Removido o pseudo-elemento ::after que criava a bolinha */
+
+        /* Classes dinâmicas que usam as variáveis CSS */
+        .bg-primary-dynamic {
+            background-color: var(--cor-primaria) !important;
+        }
+
+        .text-primary-dynamic {
+            color: var(--cor-primaria) !important;
+        }
+
+        .border-primary-dynamic {
+            border-color: var(--cor-primaria) !important;
+        }
+
+        .bg-secondary-dynamic {
+            background-color: var(--cor-secundaria) !important;
+        }
+
+        .text-secondary-dynamic {
+            color: var(--cor-secundaria) !important;
+        }
+
+        .hover-primary-dynamic:hover {
+            background-color: var(--cor-primaria) !important;
+            color: white !important;
+        }
+        
+        /* Classes dinâmicas para texto e links */
+        .text-color-dynamic {
+            color: var(--cor-texto) !important;
+        }
+        
+        .link-color-dynamic {
+            color: var(--cor-links) !important;
+        }
+        
+    </style>
+</head>
+<body class="gradient-bg min-h-screen" onload="window.scrollTo(0, 0);">
+    <!-- Script para garantir que a página carregue no topo quando recarregada -->
+    <script>
+        // Verificar se há parâmetro scrollTop na URL
+        if (window.location.href.includes('scrollTop=0')) {
+            // Forçar rolagem para o topo
+            window.scrollTo(0, 0);
+            
+            // Remover o parâmetro da URL para não acumular parâmetros
+            const urlSemParam = window.location.href.replace(/[?&]scrollTop=0(&|$)/, '$1');
+            const urlLimpa = urlSemParam.endsWith('?') || urlLimpa.endsWith('&') 
+                ? urlLimpa.slice(0, -1) 
+                : urlLimpa;
+                
+            // Atualizar a URL sem recarregar a página
+            if (urlLimpa !== window.location.href) {
+                history.replaceState(null, '', urlLimpa);
+            }
+        }
+    </script>
+    <!-- Loading Screen -->
+    <div id="loading" class="fixed inset-0 bg-white flex items-center justify-center z-50">
+        <div class="text-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-primary-dynamic mx-auto mb-4"></div>
+            <p class="text-gray-600 text-lg">Carregando catálogo...</p>
+        </div>
+    </div>
+
+    <!-- Overlay de Busca -->
+    <div id="search-overlay" class="search-overlay fixed inset-0 z-50 hidden">
+        <div class="flex items-start justify-center min-h-screen pt-16 px-4">
+            <div id="search-container" class="search-container bg-white rounded-2xl shadow-2xl w-full max-w-2xl">
+                <!-- Header da Busca -->
+                <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800">🔍 Buscar no Catálogo</h3>
+                    <button id="close-search" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Campo de Busca -->
+                <div class="p-6 border-b border-gray-200">
+                    <div class="relative">
+                        <input type="text" id="search-input" 
+                               placeholder="Digite o nome do produto, categoria ou descrição..."
+                               class="w-full px-4 py-3 pl-12 border-2 border-gray-300 rounded-xl focus:border-primary-dynamic focus:outline-none text-lg">
+                        <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Digite pelo menos 2 caracteres para buscar</p>
+                </div>
+
+                <!-- Resultados da Busca -->
+                <div id="search-results" class="search-results p-6">
+                    <div id="search-empty" class="text-center py-8">
+                        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <p class="text-gray-500">Digite algo para buscar produtos do catálogo</p>
+                    </div>
+                    
+                    <div id="search-items" class="space-y-3 hidden">
+                        <!-- Resultados serão inseridos aqui -->
+                    </div>
+
+                    <div id="no-results" class="text-center py-8 hidden">
+                        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.137 0-4.146-.832-5.657-2.343"></path>
+                        </svg>
+                        <p class="text-gray-500">Nenhum produto encontrado</p>
+                        <p class="text-sm text-gray-400 mt-1">Tente usar termos diferentes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cabeçalho Unificado - Header + Menu de Categorias como um único elemento fixo -->
+    <div id="unified-header" class="sticky top-0 z-40">
+        <!-- Header Principal -->
+        <header id="header" class="bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
+            <div class="container mx-auto px-4 py-2">
+                <!-- Mobile: Logo centralizado com busca -->
+                <div class="md:hidden flex items-center justify-between">
+                    <div class="w-8"></div> <!-- Espaçador -->
+                    
+                    <div class="flex justify-center flex-1">
+                        <img id="logo-mobile" src="" alt="Logo" 
+                             class="w-3/4 sm:w-2/3 h-auto max-h-16 sm:max-h-20 object-contain logo-hover hidden rounded-lg">
+                        <div id="logo-text-mobile" class="w-12 h-12 bg-primary-dynamic rounded-full flex items-center justify-center text-white font-bold text-lg">
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Ícone de Busca Mobile -->
+                    <button id="search-btn-mobile" class="search-icon p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Desktop: Layout centralizado com busca -->
+                <div class="hidden md:flex items-center justify-between relative">
+                    <!-- Ícone de Busca Desktop (esquerda) -->
+                    <button id="search-btn-desktop" class="search-icon p-3 hover:bg-gray-100 rounded-full transition-colors absolute left-0">
+                        <svg class="w-7 h-7 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Logo e nome centralizados -->
+                    <div class="flex items-center space-x-4 mx-auto">
+                        <img id="logo" src="" alt="Logo" class="h-20 w-20 md:h-24 md:w-24 object-cover logo-hover hidden">
+                        <div class="flex flex-col">
+                            <h1 id="nome-empresa" class="text-2xl md:text-3xl font-bold text-primary-dynamic leading-tight">
+                                Carregando...
+                            </h1>
+                            <p id="slogan" class="text-sm md:text-base text-gray-600 hidden">
+                                Carregando...
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Espaço vazio à direita para balancear o layout -->
+                    <div class="w-[52px]"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Menu de Categorias (parte do cabeçalho unificado) -->
+        <div id="mobile-category-menu" class="bg-white/95 backdrop-blur-sm border-b border-gray-100 py-3 shadow-md">
+            <div id="category-scroll" class="category-scroll flex overflow-x-auto px-4 space-x-3 min-h-[52px] items-center md:justify-center justify-start">
+                <!-- Categorias serão inseridas dinamicamente aqui -->
+                <!-- Placeholder para garantir que o menu tenha conteúdo mesmo antes do carregamento -->
+                <div class="flex-shrink-0 px-4 py-2 bg-gray-200 text-transparent rounded-full text-sm font-semibold whitespace-nowrap min-w-[80px] animate-pulse">Carregando...</div>
+                <div class="flex-shrink-0 px-4 py-2 bg-gray-200 text-transparent rounded-full text-sm font-semibold whitespace-nowrap min-w-[80px] animate-pulse">Carregando...</div>
+                <div class="flex-shrink-0 px-4 py-2 bg-gray-200 text-transparent rounded-full text-sm font-semibold whitespace-nowrap min-w-[80px] animate-pulse">Carregando...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 pt-28 pb-8">
+        <!-- Catálogo -->
+        <div id="cardapio" class="space-y-12">
+            <!-- Categorias serão inseridas aqui dinamicamente -->
+        </div>
+
+        <!-- Seção de Avaliação -->
+        <div id="avaliacao-section" class="mt-16 text-center" style="display: none;">
+            <div class="bg-white rounded-3xl p-8 shadow-xl max-w-2xl mx-auto fade-in">
+                <div class="mb-6">
+                    <div class="text-6xl mb-4">⭐</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Gostou do nosso atendimento?</h3>
+                    <p class="text-gray-600 text-lg">Sua opinião é muito importante para nós!</p>
+                </div>
+                <a id="btn-avaliar" href="#" target="_blank" style="display: none;"
+                   class="inline-flex items-center px-8 py-4 bg-primary-dynamic text-white rounded-2xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg font-semibold">
+                    <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.54-1.118l1.07-3.292a1 1 0 00-.364-1.118L3.24 8.71c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path>
+                    </svg>
+                    Avaliar no Google
+                </a>
+                <p id="avaliacao-message" class="mt-4 text-gray-600 text-sm"></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Botão de Voltar ao Topo -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-primary-dynamic text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 z-30 hidden">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <!-- Rodapé -->
+    <footer class="bg-primary-dynamic py-8 text-center text-rodape-dynamic text-sm">
+        <div class="container mx-auto px-4">
+            <p>&copy; 2024 <span id="footer-empresa">Carregando...</span></p>
+            <p class="mt-1">Desenvolvido por <a href="https://www.sys2n.com.br" target="_blank" class="link-color-dynamic hover:underline">Sys2n - Sistemas Personalizados</a></p>
+        </div>
+    </footer>
+
+    <!-- Scripts JavaScript -->
+    <script>
+        // Variáveis globais
+        let dadosCatalogo = {};
+        let configuracoesGlobais = {};
+        let categoriasAtivas = []; // Para controlo de categorias no menu
+        let currentScrollTimeout; // Para debounce do scroll
+
+        // Elementos do DOM
+        const loadingScreen = document.getElementById('loading');
+        const searchOverlay = document.getElementById('search-overlay');
+        const searchContainer = document.getElementById('search-container');
+        const closeSearchButton = document.getElementById('close-search');
+        const searchInput = document.getElementById('search-input');
+        const searchEmptyState = document.getElementById('search-empty');
+        const searchItemsContainer = document.getElementById('search-items');
+        const noResultsMessage = document.getElementById('no-results');
+        const searchBtnMobile = document.getElementById('search-btn-mobile');
+        const searchBtnDesktop = document.getElementById('search-btn-desktop');
+        const logoMobile = document.getElementById('logo-mobile');
+        const logoTextMobile = document.getElementById('logo-text-mobile');
+        const logoDesktop = document.getElementById('logo');
+        const nomeEmpresaHeader = document.getElementById('nome-empresa');
+        const sloganHeader = document.getElementById('slogan'); 
+        const categoryScrollContainer = document.getElementById('category-scroll');
+        const cardapioContainer = document.getElementById('cardapio');
+        const avaliacaoSection = document.getElementById('avaliacao-section');
+        const btnAvaliar = document.getElementById('btn-avaliar');
+        const avaliacaoMessage = document.getElementById('avaliacao-message');
+        const backToTopButton = document.getElementById('back-to-top');
+        const footerEmpresa = document.getElementById('footer-empresa');
+
+        // Função para aplicar as configurações globais (cores, textos, SEO)
+        function aplicarConfiguracoesGlobais() {
+            // Cores
+            document.documentElement.style.setProperty('--cor-primaria', configuracoesGlobais.corPrimaria);
+            document.documentElement.style.setProperty('--cor-secundaria', configuracoesGlobais.corSecundaria);
+            document.documentElement.style.setProperty('--cor-fundo', configuracoesGlobais.corFundo);
+            document.documentElement.style.setProperty('--cor-texto', configuracoesGlobais.corTexto);
+            document.documentElement.style.setProperty('--cor-links', configuracoesGlobais.corLinks);
+            document.documentElement.style.setProperty('--cor-texto-rodape', configuracoesGlobais.corTextoRodape);
+
+            // Textos e Imagens
+            document.title = configuracoesGlobais.nomeEmpresa || 'Catálogo Online'; // Fallback para o título da página
+            nomeEmpresaHeader.textContent = configuracoesGlobais.nomeEmpresa || 'Nome da Empresa';
+            footerEmpresa.textContent = configuracoesGlobais.nomeEmpresa || 'Nome da Empresa';
+
+            if (configuracoesGlobais.sloganEmpresa) {
+                sloganHeader.textContent = configuracoesGlobais.sloganEmpresa;
+                sloganHeader.classList.remove('hidden');
+            } else {
+                sloganHeader.classList.add('hidden');
+            }
+
+            // Lógica para Logo (imagem vs. texto)
+            if (configuracoesGlobais.logoUrl && configuracoesGlobais.logoUrl !== 'N/A') {
+                logoMobile.src = configuracoesGlobais.logoUrl;
+                logoMobile.alt = `Logo ${configuracoesGlobais.nomeEmpresa || ''}`;
+                logoMobile.classList.remove('hidden');
+                logoTextMobile.classList.add('hidden');
+
+                logoDesktop.src = configuracoesGlobais.logoUrl;
+                logoDesktop.alt = `Logo ${configuracoesGlobais.nomeEmpresa || ''}`;
+                logoDesktop.classList.remove('hidden');
+            } else {
+                // Adicionado um fallback para nomeEmpresa para evitar 'undefined.split'
+                const nomeParaLogoTexto = configuracoesGlobais.nomeEmpresa || ''; 
+                logoMobile.classList.add('hidden');
+                logoTextMobile.textContent = nomeParaLogoTexto.split(' ').map(n => n[0]).join('');
+                logoTextMobile.classList.remove('hidden');
+                logoDesktop.classList.add('hidden'); // Oculta logo desktop se não houver URL
+            }
+
+            // Favicon
+            const favicon = document.querySelector("link[rel='icon']");
+            if (favicon && configuracoesGlobais.faviconUrl && configuracoesGlobais.faviconUrl !== 'N/A') {
+                favicon.href = configuracoesGlobais.faviconUrl;
+            }
+
+            // Meta Tags para SEO e Compartilhamento
+            document.getElementById('meta-description').content = configuracoesGlobais.metaDescription || '';
+            document.getElementById('meta-keywords').content = configuracoesGlobais.metaKeywords || '';
+            document.getElementById('og-title').content = configuracoesGlobais.ogTitle || configuracoesGlobais.nomeEmpresa || '';
+            document.getElementById('og-description').content = configuracoesGlobais.ogDescription || configuracoesGlobais.sloganEmpresa || '';
+            document.getElementById('og-image').content = configuracoesGlobais.ogImageUrl || configuracoesGlobais.logoUrl || '';
+            document.getElementById('og-url').content = configuracoesGlobais.ogUrl || window.location.href;
+            document.getElementById('twitter-title').content = configuracoesGlobais.twitterTitle || configuracoesGlobais.ogTitle || configuracoesGlobais.nomeEmpresa || '';
+            document.getElementById('twitter-description').content = configuracoesGlobais.twitterDescription || configuracoesGlobais.ogDescription || '';
+            document.getElementById('twitter-image').content = configuracoesGlobais.twitterImageUrl || configuracoesGlobais.ogImageUrl || '';
+        }
+
+        // Função para carregar dados do catálogo (agora de um Google Apps Script)
+        async function carregarDadosCatalogo() {
+            // URL do seu Google Apps Script publicado como Aplicativo Web
+            // MUITO IMPORTANTE: Substitua este URL pelo SEU REAL URL do Apps Script.
+            // Exemplo: 'https://script.google.com/macros/s/AKfycbz_YOUR_SCRIPT_ID_HERE/exec';
+            const APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwTLUSK12uSH6Va-Se_IOwpzUGgjnHU3OcXcf3_hYE0jp6oYaNdg4JL2CNBKAxQjyls/exec'; 
+
+            try {
+                const response = await fetch(APPS_SCRIPT_WEB_APP_URL);
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}. Verifique se o URL do Apps Script está correto e se foi publicado para 'Qualquer pessoa'.`);
+                }
+                const dadosRecebidos = await response.json();
+
+                // Verifica se a estrutura dos dados recebidos é a esperada
+                if (dadosRecebidos.error) {
+                    throw new Error(`Erro do Apps Script: ${dadosRecebidos.error}`);
+                }
+                if (!dadosRecebidos.configuracoes || !dadosRecebidos.categorias) {
+                    throw new Error("Estrutura de dados inválida recebida do Apps Script. Verifique os nomes dos cabeçalhos na sua planilha.");
+                }
+
+                dadosCatalogo = dadosRecebidos;
+                configuracoesGlobais = dadosRecebidos.configuracoes;
+
+                // Aplica as configurações globais
+                aplicarConfiguracoesGlobais();
+
+                // Renderiza o cardápio e os menus
+                renderizarCategoriasMenu(dadosCatalogo.categorias);
+                renderizarCardapio(dadosCatalogo.categorias);
+
+                // Exibe a seção de avaliação se configurado
+                if (configuracoesGlobais.exibirAvaliacao && configuracoesGlobais.linkAvaliacao && configuracoesGlobais.linkAvaliacao !== 'N/A') {
+                    btnAvaliar.href = configuracoesGlobais.linkAvaliacao;
+                    btnAvaliar.style.display = 'inline-flex'; // Exibe o botão
+                    avaliacaoSection.style.display = 'block';
+                } else {
+                    avaliacaoSection.style.display = 'none'; // Oculta se não houver link ou não estiver configurado
+                }
+
+            } catch (error) {
+                console.error("Erro ao carregar dados do catálogo:", error);
+                // Exibir mensagem de erro mais amigável no UI
+                cardapioContainer.innerHTML = `
+                    <div class="text-center py-10 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold">Erro ao carregar o catálogo!</strong>
+                        <span class="block sm:inline"> Por favor, verifique os seguintes pontos:</span>
+                        <ul class="list-disc list-inside text-left mx-auto max-w-md mt-2">
+                            <li>O URL do Google Apps Script na linha 703 do HTML está correto?</li>
+                            <li>O Apps Script foi publicado como 'Aplicativo Web' com acesso 'Qualquer pessoa'?</li>
+                            <li>O ID da planilha no Apps Script está correto?</li>
+                            <li>Os nomes dos separadores ('Config', 'Categorias', 'Itens') na sua planilha estão corretos?</li>
+                            <li>As colunas na aba 'Config' (ex: 'Nome da Empresa', 'Cor Primária') estão preenchidas corretamente?</li>
+                        </ul>
+                        <p class="text-sm mt-3">Detalhes técnicos: ${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                // Oculta a tela de loading independentemente do sucesso ou falha
+                loadingScreen.style.display = 'none';
+                document.body.style.overflow = ''; // Restaura o scroll do body
+                // Adiciona um pequeno atraso para garantir que as seções estejam renderizadas
+                setTimeout(() => {
+                    updateActiveCategoryInMenu('all'); // Ativa "Todos" por padrão
+                }, 100); // Pequeno atraso para garantir que o DOM esteja pronto
+            }
+        }
+
+        // Função para renderizar as categorias no menu horizontal
+        function renderizarCategoriasMenu(categorias) {
+            categoryScrollContainer.innerHTML = ''; // Limpa o conteúdo existente
+            
+            // Adiciona a categoria "Todos"
+            const allCategoryItem = document.createElement('div');
+            allCategoryItem.className = 'category-item flex-shrink-0 px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-semibold whitespace-nowrap cursor-pointer hover-primary-dynamic';
+            allCategoryItem.textContent = 'Todos';
+            allCategoryItem.dataset.id = 'all';
+            allCategoryItem.onclick = () => {
+                renderizarCardapio(dadosCatalogo.categorias); // Mostra todas as categorias
+                updateActiveCategoryInMenu('all');
+                scrollToTop(); // Volta para o topo ao clicar em "Todos"
+            };
+            categoryScrollContainer.appendChild(allCategoryItem);
+
+            categorias.forEach(categoria => {
+                // Filtra categorias inativas
+                if (categoria.ativa) { 
+                    const categoryItem = document.createElement('div');
+                    categoryItem.className = 'category-item flex-shrink-0 px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-semibold whitespace-nowrap cursor-pointer hover-primary-dynamic';
+                    categoryItem.textContent = categoria.nome; // Usa Título_Exibição como nome
+                    categoryItem.dataset.id = categoria.id; // Usa Nome_Categoria como ID
+                    categoryItem.onclick = () => scrollToCategory(categoria.id);
+                    categoryScrollContainer.appendChild(categoryItem);
+                }
+            });
+        }
+
+        // Função para renderizar o conteúdo do cardápio
+        function renderizarCardapio(categorias) {
+            cardapioContainer.innerHTML = ''; // Limpa o conteúdo existente
+
+            if (!categorias || categorias.length === 0) {
+                cardapioContainer.innerHTML = '<p class="text-center text-gray-500 text-lg py-10">Nenhuma categoria ou produto encontrado.</p>';
+                return;
+            }
+
+            // Ordena as categorias pela Ordem_Exibição
+            const categoriasOrdenadas = [...categorias].sort((a, b) => a.ordemExibicao - b.ordemExibicao);
+
+            categoriasOrdenadas.forEach(categoria => {
+                // Renderiza apenas categorias ativas
+                if (categoria.ativa) {
+                    const categoriaSecao = document.createElement('section');
+                    categoriaSecao.id = categoria.id; // ID da seção é o Nome_Categoria
+                    categoriaSecao.className = 'categoria-secao mb-8 p-4 bg-white rounded-xl shadow-md fade-in'; // Adicionado fade-in
+
+                    // Filtra itens disponíveis e os ordena se houver Classificação_Adicional (ou outro critério)
+                    const itensDisponiveis = categoria.itens.filter(item => item.disponivel);
+                    // Adicione aqui a lógica de ordenação de itens se necessário, por exemplo:
+                    // .sort((a, b) => a.nome.localeCompare(b.nome)); 
+
+                    categoriaSecao.innerHTML = `
+                        <h2 class="text-2xl font-bold text-primary-dynamic mb-4 border-b-2 border-primary-dynamic pb-2">${categoria.nome}</h2>
+                        <p class="text-gray-600 mb-6">${categoria.descricao || ''}</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            ${itensDisponiveis.map(item => `
+                                <div class="card-hover bg-white rounded-xl shadow-md overflow-hidden flex flex-col menu-item-container">
+                                    <div class="menu-item-image-wrapper">
+                                        <img src="${item.imagem || 'https://placehold.co/300x200/D2691E/FFFFFF?text=Sem+Imagem'}" 
+                                             alt="${item.nome}" class="w-full h-48 object-cover">
+                                        ${item.disponivel === false ? `
+                                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                                                <span class="text-white text-xl font-bold">Indisponível</span>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                    <div class="p-4 flex flex-col flex-grow menu-item-content">
+                                        <div class="menu-item-title-price mb-2">
+                                            <h3 class="text-lg font-semibold text-gray-800 leading-tight">${item.nome}</h3>
+                                            <span class="text-xl font-bold text-secondary-dynamic">${configuracoesGlobais.moeda || 'R$'} ${item.preco.toFixed(2).replace('.', ',')}</span>
+                                        </div>
+                                        ${item.descricao ? `<p class="text-gray-600 text-sm flex-grow">${item.descricao}</p>` : ''}
+                                        ${item.observacoes ? `<p class="text-gray-500 text-xs mt-2">${item.observacoes}</p>` : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    cardapioContainer.appendChild(categoriaSecao);
+                }
+            });
+        }
+
+        // Função para filtrar o cardápio com base na busca
+        function filtrarCardapio(termo) {
+            const termoLowerCase = termo.toLowerCase();
+            searchItemsContainer.innerHTML = ''; // Limpa resultados anteriores
+            searchItemsContainer.classList.add('hidden');
+            searchEmptyState.classList.add('hidden');
+            noResultsMessage.classList.add('hidden');
+
+            if (termoLowerCase.length < 2) {
+                searchEmptyState.classList.remove('hidden');
+                return;
+            }
+
+            const resultados = [];
+            dadosCatalogo.categorias.forEach(categoria => {
+                categoria.itens.forEach(item => {
+                    const nomeMatch = item.nome.toLowerCase().includes(termoLowerCase);
+                    const descricaoMatch = item.descricao && item.descricao.toLowerCase().includes(termoLowerCase);
+                    const categoriaMatch = categoria.nome.toLowerCase().includes(termoLowerCase); // Busca por nome de categoria
+                    
+                    if (item.disponivel && (nomeMatch || descricaoMatch || categoriaMatch)) {
+                        resultados.push({ ...item, categoriaNome: categoria.nome, categoriaId: categoria.id });
+                    }
+                });
+            });
+
+            if (resultados.length > 0) {
+                searchItemsContainer.classList.remove('hidden');
+                resultados.forEach(item => {
+                    const searchItemDiv = document.createElement('div');
+                    searchItemDiv.className = 'search-item p-3 border-b border-gray-100 last:border-b-0 cursor-pointer';
+                    searchItemDiv.innerHTML = `
+                        <h4 class="font-semibold text-gray-800">${highlightText(item.nome, termoLowerCase)}</h4>
+                        <p class="text-sm text-gray-600">${highlightText(item.descricao || '', termoLowerCase)}</p>
+                        <p class="text-xs text-gray-500 mt-1">Categoria: ${highlightText(item.categoriaNome, termoLowerCase)}</p>
+                        <span class="text-lg font-bold text-secondary-dynamic">${configuracoesGlobais.moeda || 'R$'} ${item.preco.toFixed(2).replace('.', ',')}</span>
+                    `;
+                    searchItemDiv.onclick = () => {
+                        scrollToCategory(item.categoriaId); // Rola para a categoria do item
+                        closeSearchOverlay(); // Fecha o overlay de busca
+                    };
+                    searchItemsContainer.appendChild(searchItemDiv);
+                });
+            } else {
+                noResultsMessage.classList.remove('hidden');
+            }
+        }
+
+        // Função auxiliar para destacar texto na busca
+        function highlightText(text, searchTerm) {
+            if (!text || !searchTerm) return text;
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        // Função para abrir/fechar o overlay de busca
+        function openSearchOverlay() {
+            searchOverlay.classList.remove('hidden');
+            setTimeout(() => {
+                searchOverlay.classList.add('opacity-100');
+                searchContainer.classList.add('active');
+                searchInput.focus();
+            }, 10); // Pequeno delay para a transição
+            document.body.style.overflow = 'hidden'; // Impede o scroll do body
+        }
+
+        function closeSearchOverlay() {
+            searchOverlay.classList.remove('opacity-100');
+            searchContainer.classList.remove('active');
+            setTimeout(() => {
+                searchOverlay.classList.add('hidden');
+                searchInput.value = '';
+                filtrarCardapio(''); // Limpa e reseta os resultados da busca
+            }, 300); // Espera a transição terminar
+            document.body.style.overflow = ''; // Restaura o scroll do body
+        }
+
+        // Função para rolar para uma seção de categoria
+        function scrollToCategory(id) {
+            const section = document.getElementById(id);
+            if (section) {
+                // Ajusta o scroll para compensar o cabeçalho fixo
+                const headerHeight = document.getElementById('unified-header').offsetHeight;
+                const offsetTop = section.getBoundingClientRect().top + window.scrollY - headerHeight - 20; // 20px de padding extra
+                window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+                updateActiveCategoryInMenu(id); // Atualiza o item ativo no menu
+            }
+        }
+
+        // Função para rolar para o topo
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Função para atualizar o botão de voltar ao topo
+        function updateBackToTopButtonVisibility() {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.remove('hidden');
+            } else {
+                backToTopButton.classList.add('hidden'); 
+            }
+        }
+
+        // Função para atualizar o estilo da categoria ativa no menu de categorias
+        function updateActiveCategoryInMenu(activeId = null) {
+            const currentScrollPos = window.scrollY;
+            const headerHeight = document.getElementById('unified-header').offsetHeight;
+            let foundActive = false;
+
+            // Remove 'active' de todos os itens do menu
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.classList.remove('active');
+                item.classList.add('bg-gray-200', 'text-gray-700');
+                item.classList.remove('bg-primary-dynamic', 'text-white');
+            });
+
+            // Se um ID ativo foi passado (ex: clique no menu ou busca)
+            if (activeId) {
+                const itemToActivate = categoryScrollContainer.querySelector(`[data-id="${activeId}"]`);
+                if (itemToActivate) {
+                    itemToActivate.classList.add('active');
+                    itemToActivate.classList.remove('bg-gray-200', 'text-gray-700');
+                    itemToActivate.classList.add('bg-primary-dynamic', 'text-white');
+                    itemToActivate.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+                return; // Sai da função, pois a ativação foi manual
+            }
+
+            // Ativação baseada no scroll
+            document.querySelectorAll('.categoria-secao').forEach(section => {
+                // Considera a seção ativa se seu topo estiver dentro da área visível abaixo do header
+                if (currentScrollPos + headerHeight >= section.offsetTop &&
+                    currentScrollPos + headerHeight < section.offsetTop + section.offsetHeight) {
+                    
+                    const categoryId = section.id;
+                    const menuItem = categoryScrollContainer.querySelector(`[data-id="${categoryId}"]`);
+                    if (menuItem) {
+                        menuItem.classList.add('active');
+                        menuItem.classList.remove('bg-gray-200', 'text-gray-700');
+                        menuItem.classList.add('bg-primary-dynamic', 'text-white');
+                        menuItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }
+                    foundActive = true;
+                }
+            });
+
+            // Se nenhuma categoria específica estiver visível (ex: no topo da página antes da primeira seção)
+            if (!foundActive) {
+                const allCategoryItem = categoryScrollContainer.querySelector(`[data-id="all"]`);
+                if (allCategoryItem) {
+                    allCategoryItem.classList.add('active');
+                    allCategoryItem.classList.remove('bg-gray-200', 'text-gray-700');
+                    allCategoryItem.classList.add('bg-primary-dynamic', 'text-white');
+                    allCategoryItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            }
+        }
+
+        // --- Event Listeners ---
+        searchBtnMobile.addEventListener('click', openSearchOverlay);
+        searchBtnDesktop.addEventListener('click', openSearchOverlay);
+        closeSearchButton.addEventListener('click', closeSearchOverlay);
+        searchOverlay.addEventListener('click', (e) => {
+            if (e.target === searchOverlay) {
+                closeSearchOverlay();
+            }
+        });
+        searchInput.addEventListener('input', (e) => {
+            filtrarCardapio(e.target.value);
+        });
+
+        backToTopButton.addEventListener('click', scrollToTop);
+        window.addEventListener('scroll', () => {
+            updateBackToTopButtonVisibility();
+            // Debounce para updateActiveCategoryInMenu para evitar execuções excessivas
+            clearTimeout(currentScrollTimeout);
+            currentScrollTimeout = setTimeout(() => {
+                updateActiveCategoryInMenu();
+            }, 100); // Ajuste o tempo conforme necessário
+        });
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarDadosCatalogo();
+        });
+    </script>
+</body>
+</html>
