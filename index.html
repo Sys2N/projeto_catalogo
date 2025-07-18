@@ -430,15 +430,15 @@
         // Função para aplicar as configurações globais (cores, textos, SEO)
         function aplicarConfiguracoesGlobais() {
             // Cores
-            document.documentElement.style.setProperty('--cor-primaria', configuracoesGlobais.corPrimaria);
-            document.documentElement.style.setProperty('--cor-secundaria', configuracoesGlobais.corSecundaria);
-            document.documentElement.style.setProperty('--cor-fundo', configuracoesGlobais.corFundo);
-            document.documentElement.style.setProperty('--cor-texto', configuracoesGlobais.corTexto);
-            document.documentElement.style.setProperty('--cor-links', configuracoesGlobais.corLinks);
-            document.documentElement.style.setProperty('--cor-texto-rodape', configuracoesGlobais.corTextoRodape);
+            document.documentElement.style.setProperty('--cor-primaria', configuracoesGlobais.corPrimaria || '#8B4513');
+            document.documentElement.style.setProperty('--cor-secundaria', configuracoesGlobais.corSecundaria || '#D2691E');
+            document.documentElement.style.setProperty('--cor-fundo', configuracoesGlobais.corFundo || '#f8fafc');
+            document.documentElement.style.setProperty('--cor-texto', configuracoesGlobais.corTexto || '#333333');
+            document.documentElement.style.setProperty('--cor-links', configuracoesGlobais.corLinks || '#8B4513');
+            document.documentElement.style.setProperty('--cor-texto-rodape', configuracoesGlobais.corTextoRodape || '#ffffff');
 
             // Textos e Imagens
-            document.title = configuracoesGlobais.nomeEmpresa || 'Catálogo Online'; // Fallback para o título da página
+            document.title = configuracoesGlobais.tituloPaginaIdioma || configuracoesGlobais.nomeEmpresa || 'Catálogo Online';
             nomeEmpresaHeader.textContent = configuracoesGlobais.nomeEmpresa || 'Nome da Empresa';
             footerEmpresa.textContent = configuracoesGlobais.nomeEmpresa || 'Nome da Empresa';
 
@@ -450,22 +450,27 @@
             }
 
             // Lógica para Logo (imagem vs. texto)
-            if (configuracoesGlobais.logoUrl && configuracoesGlobais.logoUrl !== 'N/A') {
-                logoMobile.src = configuracoesGlobais.logoUrl;
+            const logoUrl = configuracoesGlobais.logoUrl && configuracoesGlobais.logoUrl !== 'N/A' ? configuracoesGlobais.logoUrl : '';
+            const logoMobileUrl = configuracoesGlobais.logoMobileUrl && configuracoesGlobais.logoMobileUrl !== 'N/A' ? configuracoesGlobais.logoMobileUrl : logoUrl;
+
+            if (logoMobileUrl) {
+                logoMobile.src = logoMobileUrl;
                 logoMobile.alt = `Logo ${configuracoesGlobais.nomeEmpresa || ''}`;
                 logoMobile.classList.remove('hidden');
                 logoTextMobile.classList.add('hidden');
-
-                logoDesktop.src = configuracoesGlobais.logoUrl;
-                logoDesktop.alt = `Logo ${configuracoesGlobais.nomeEmpresa || ''}`;
-                logoDesktop.classList.remove('hidden');
             } else {
-                // Adicionado um fallback para nomeEmpresa para evitar 'undefined.split'
                 const nomeParaLogoTexto = configuracoesGlobais.nomeEmpresa || ''; 
                 logoMobile.classList.add('hidden');
                 logoTextMobile.textContent = nomeParaLogoTexto.split(' ').map(n => n[0]).join('');
                 logoTextMobile.classList.remove('hidden');
-                logoDesktop.classList.add('hidden'); // Oculta logo desktop se não houver URL
+            }
+
+            if (logoUrl) {
+                logoDesktop.src = logoUrl;
+                logoDesktop.alt = `Logo ${configuracoesGlobais.nomeEmpresa || ''}`;
+                logoDesktop.classList.remove('hidden');
+            } else {
+                logoDesktop.classList.add('hidden');
             }
 
             // Favicon
@@ -519,8 +524,9 @@
                 renderizarCardapio(dadosCatalogo.categorias);
 
                 // Exibe a seção de avaliação se configurado
-                if (configuracoesGlobais.exibirAvaliacao && configuracoesGlobais.linkAvaliacao && configuracoesGlobais.linkAvaliacao !== 'N/A') {
-                    btnAvaliar.href = configuracoesGlobais.linkAvaliacao;
+                // A propriedade 'exibirAvaliacao' deve ser um booleano (TRUE/FALSE) na planilha
+                if (configuracoesGlobais.exibirAvaliacao && configuracoesGlobais.googleMeuNegocioUrl && configuracoesGlobais.googleMeuNegocioUrl !== 'N/A') {
+                    btnAvaliar.href = configuracoesGlobais.googleMeuNegocioUrl; // Usando Google Meu Negócio URL para avaliação
                     btnAvaliar.style.display = 'inline-flex'; // Exibe o botão
                     avaliacaoSection.style.display = 'block';
                 } else {
@@ -571,16 +577,18 @@
             };
             categoryScrollContainer.appendChild(allCategoryItem);
 
-            categorias.forEach(categoria => {
-                // Filtra categorias inativas
-                if (categoria.ativa) { 
-                    const categoryItem = document.createElement('div');
-                    categoryItem.className = 'category-item flex-shrink-0 px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-semibold whitespace-nowrap cursor-pointer hover-primary-dynamic';
-                    categoryItem.textContent = categoria.nome; // Usa Título_Exibição como nome
-                    categoryItem.dataset.id = categoria.id; // Usa Nome_Categoria como ID
-                    categoryItem.onclick = () => scrollToCategory(categoria.id);
-                    categoryScrollContainer.appendChild(categoryItem);
-                }
+            // Filtra e ordena categorias ativas
+            const categoriasAtivasOrdenadas = dadosCatalogo.categorias
+                .filter(cat => cat.ativa)
+                .sort((a, b) => (a.ordemExibicao || 9999) - (b.ordemExibicao || 9999)); // Garante que categorias sem ordem vão para o fim
+
+            categoriasAtivasOrdenadas.forEach(categoria => {
+                const categoryItem = document.createElement('div');
+                categoryItem.className = 'category-item flex-shrink-0 px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-semibold whitespace-nowrap cursor-pointer hover-primary-dynamic';
+                categoryItem.textContent = categoria.nome; // Usa Título_Exibição como nome
+                categoryItem.dataset.id = categoria.id; // Usa Nome_Categoria como ID
+                categoryItem.onclick = () => scrollToCategory(categoria.id);
+                categoryScrollContainer.appendChild(categoryItem);
             });
         }
 
@@ -594,7 +602,7 @@
             }
 
             // Ordena as categorias pela Ordem_Exibição
-            const categoriasOrdenadas = [...categorias].sort((a, b) => a.ordemExibicao - b.ordemExibicao);
+            const categoriasOrdenadas = [...categorias].sort((a, b) => (a.ordemExibicao || 9999) - (b.ordemExibicao || 9999));
 
             categoriasOrdenadas.forEach(categoria => {
                 // Renderiza apenas categorias ativas
@@ -606,7 +614,7 @@
                     // Filtra itens disponíveis e os ordena se houver Classificação_Adicional (ou outro critério)
                     const itensDisponiveis = categoria.itens.filter(item => item.disponivel);
                     // Adicione aqui a lógica de ordenação de itens se necessário, por exemplo:
-                    // .sort((a, b) => a.nome.localeCompare(b.nome)); 
+                    // itensDisponiveis.sort((a, b) => a.nome.localeCompare(b.nome)); 
 
                     categoriaSecao.innerHTML = `
                         <h2 class="text-2xl font-bold text-primary-dynamic mb-4 border-b-2 border-primary-dynamic pb-2">${categoria.nome}</h2>
