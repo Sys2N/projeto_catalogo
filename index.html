@@ -1,64 +1,37 @@
-<!--linhas para atualizar dados da empresa:
-        - 
-        -            
-        - 
-        - 43 a 61 - configurações defauld
-        - 
-        - 393 - inserir link avaliação google
-        -
-        - 415 - nome da empresa
-        -
-        - 425 a 432 - configurações da empresa   
-        -
-        - 516 - inserir URL do apps´script_web publicado
--->
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Meta tags para prevenir cache -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     
-    <!-- Meta tags para SEO que serão preenchidas dinamicamente -->
-    <!-- ATENÇÃO: Preencha estas meta tags diretamente aqui ou remova se preferir que o JS as preencha com valores padrão -->
     <meta name="description" content="Flores e Presentes de Qualidade!!! Conheça Nosso Catálogo." id="meta-description">
     <meta name="keywords" content="Floricultura Nina" id="meta-keywords">
     <meta name="author" content="Sys2n - Sistemas Personalizados">
     
-    <!-- Meta tags para compartilhamento em redes sociais (Open Graph) -->
     <meta property="og:title" content="Floricultura Nina - Catálogo Online" id="og-title">
     <meta property="og:description" content="Flores e Presentes de Qualidade!!! Conheça Nosso Catálogo." id="og-description">
-    <meta property="og:image" content="https://res.cloudinary.com/dzjbspeai/image/upload/v1752446117/2_yz6lxj.png" id="og-image"> <!-- URL da imagem para compartilhamento -->
-    <meta property="og:image:width" content="1200">
+    <meta property="og:image" content="https://res.cloudinary.com/dzjbspeai/image/upload/v1752446117/2_yz6lxj.png" id="og-image"> <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:url" content="https://ninaflores-catalogo.sys2n.com.br/" id="og-url"> <!-- URL do seu catálogo -->
-    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ninaflores-catalogo.sys2n.com.br/" id="og-url"> <meta property="og:type" content="website">
     
-    <!-- Meta tags para Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Floricultura Nina - Catálogo Online" id="twitter-title">
     <meta name="twitter:description" content="Flores e Presentes de Qualidade!!! Conheça nosso catálogo." id="twitter-description">
-    <meta name="twitter:image" content="https://res.cloudinary.com/dzjbspeai/image/upload/v1752446117/2_yz6lxj.png" id="twitter-image"> <!-- URL da imagem para Twitter -->
-    
-    <!-- Favicon (será preenchido dinamicamente) -->
-    <link rel="icon" href="https://res.cloudinary.com/dzjbspeai/image/upload/v1752446117/2_yz6lxj.png" type="image/png"> <!-- URL do seu Favicon -->
-    
-    <title>Floricultura Nina - Catálogo Online</title>
+    <meta name="twitter:image" content="https://res.cloudinary.com/dzjbspeai/image/upload/v1752446117/2_yz6lxj.png" id="twitter-image"> <link rel="icon" href="https://res.cloudinary.com/dzjbspeai/image/upload/v1752446117/2_yz6lxj.png" type="image/png"> <title>Floricultura Nina - Catálogo Online</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Variáveis CSS para CORES DA EMPRESA (Hardcoded) */
         :root {
-            --cor-primaria: #47360A; /* Personalize aqui a cor primária(#614E38) */
-            --cor-secundaria: #D2691E; /* Personalize aqui a cor secundária (#B2B89B) */
-            --cor-fundo: #DBCBB8; /* Personalize aqui a cor de fundo (#f8fafc) */
-            --cor-texto: #FCF0D3; /* Personalize aqui a cor do texto principal (#333333) */
-            --cor-links: #FCF0D3; /* Personalize aqui a cor dos links (#8B4513) */
-            --cor-texto-rodape: #FCF0D3; /* Personalize aqui a cor do texto do rodapé (#D2691E) */
+            --cor-primaria: #3D2B1F; /* Personalize aqui a cor primária*/
+            --cor-secundaria: #3D2B1F; /* Personalize aqui a cor secundária*/
+            --cor-fundo: #DBCBB8; /* Personalize aqui a cor de fundo*/
+            --cor-texto: #3D2B1F; /* Personalize aqui a cor do texto principal*/
+            --cor-links: #DBCBB8; /* Personalize aqui a cor dos links*/
+            --cor-texto-rodape: #DBCBB8; /* Personalize aqui a cor do texto do rodapé*/
         }
 
         /* Animações personalizadas */
@@ -222,29 +195,107 @@
             color: var(--cor-links) !important;
         }
         
+        /* Estilos para o Modal de Imagem */
+        .zoom-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+
+        .zoom-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .zoom-image-container {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoom-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 0.75rem;
+        }
+
+        .zoom-close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .zoom-close-button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Botão Ampliar Imagem dentro do card */
+        .zoom-image-button {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            z-index: 10; /* Garante que fique acima da imagem */
+        }
+
+        .zoom-image-button:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        
     </style>
 </head>
 <body class="gradient-bg min-h-screen" onload="window.scrollTo(0, 0);">
-    <!-- Script para garantir que a página carregue no topo quando recarregada -->
     <script>
         // Verificar se há parâmetro scrollTop na URL
         if (window.location.href.includes('scrollTop=0')) {
             // Forçar rolagem para o topo
             window.scrollTo(0, 0);
-            
             // Remover o parâmetro da URL para não acumular parâmetros
             const urlSemParam = window.location.href.replace(/[?&]scrollTop=0(&|$)/, '$1');
             const urlLimpa = urlSemParam.endsWith('?') || urlLimpa.endsWith('&') 
                 ? urlLimpa.slice(0, -1) 
                 : urlLimpa;
-                
             // Atualizar a URL sem recarregar a página
             if (urlLimpa !== window.location.href) {
                 history.replaceState(null, '', urlLimpa);
             }
         }
     </script>
-    <!-- Loading Screen -->
     <div id="loading" class="fixed inset-0 bg-white flex items-center justify-center z-50">
         <div class="text-center">
             <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-primary-dynamic mx-auto mb-4"></div>
@@ -252,11 +303,9 @@
         </div>
     </div>
 
-    <!-- Overlay de Busca -->
     <div id="search-overlay" class="search-overlay fixed inset-0 z-50 hidden">
         <div class="flex items-start justify-center min-h-screen pt-16 px-4">
             <div id="search-container" class="search-container bg-white rounded-2xl shadow-2xl w-full max-w-2xl">
-                <!-- Header da Busca -->
                 <div class="flex items-center justify-between p-6 border-b border-gray-200">
                     <h3 class="text-xl font-bold text-gray-800">🔍 Buscar no Catálogo</h3>
                     <button id="close-search" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
@@ -266,7 +315,6 @@
                     </button>
                 </div>
 
-                <!-- Campo de Busca -->
                 <div class="p-6 border-b border-gray-200">
                     <div class="relative">
                         <input type="text" id="search-input" 
@@ -279,7 +327,6 @@
                     <p class="text-sm text-gray-500 mt-2">Digite pelo menos 2 caracteres para buscar</p>
                 </div>
 
-                <!-- Resultados da Busca -->
                 <div id="search-results" class="search-results p-6">
                     <div id="search-empty" class="text-center py-8">
                         <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -289,8 +336,7 @@
                     </div>
                     
                     <div id="search-items" class="space-y-3 hidden">
-                        <!-- Resultados serão inseridos aqui -->
-                    </div>
+                        </div>
 
                     <div id="no-results" class="text-center py-8 hidden">
                         <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -304,26 +350,18 @@
         </div>
     </div>
 
-    <!-- Cabeçalho Unificado - Header + Menu de Categorias como um único elemento fixo -->
     <div id="unified-header" class="sticky top-0 z-40">
-        <!-- Header Principal -->
         <header id="header" class="bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
             <div class="container mx-auto px-4 py-2">
-                <!-- Mobile: Logo centralizado com busca -->
                 <div class="md:hidden flex items-center justify-between">
-                    <div class="w-8"></div> <!-- Espaçador -->
-                    
-                    <div class="flex justify-center flex-1">
-                        <!-- Logo Mobile (personalize o src e alt) -->
-                        <img id="logo-mobile" src="https://placehold.co/80x80/8B4513/FFFFFF?text=LOGO" alt="Logo Nina's Delícias" 
+                    <div class="w-8"></div> <div class="flex justify-center flex-1">
+                        <img id="logo-mobile" src="https://res.cloudinary.com/dzjbspeai/image/upload/v1751926536/logo_6_ogdffa.png" alt="Sys2n" 
                              class="w-3/4 sm:w-2/3 h-auto max-h-16 sm:max-h-20 object-contain logo-hover rounded-lg">
-                        <!-- Texto do Logo Mobile (exibido se não houver imagem) -->
                         <div id="logo-text-mobile" class="w-12 h-12 bg-primary-dynamic rounded-full flex items-center justify-center text-white font-bold text-lg hidden">
                             ND
                         </div>
                     </div>
                     
-                    <!-- Ícone de Busca Mobile -->
                     <button id="search-btn-mobile" class="search-icon p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -331,42 +369,32 @@
                     </button>
                 </div>
                 
-                <!-- Desktop: Layout centralizado com busca -->
                 <div class="hidden md:flex items-center justify-between relative">
-                    <!-- Ícone de Busca Desktop (esquerda) -->
                     <button id="search-btn-desktop" class="search-icon p-3 hover:bg-gray-100 rounded-full transition-colors absolute left-0">
                         <svg class="w-7 h-7 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </button>
 
-                    <!-- Logo e nome centralizados -->
                     <div class="flex items-center space-x-4 mx-auto">
-                        <!-- Logo Desktop (personalize o src e alt) -->
                         <img id="logo" src="https://res.cloudinary.com/dzjbspeai/image/upload/v1751926536/logo_6_ogdffa.png" alt="Logo-Sys2n" class="h-20 w-20 md:h-24 md:w-24 object-cover logo-hover">
                         <div class="flex flex-col">
-                            <!-- Nome da Empresa (personalize o texto) -->
                             <h1 id="nome-empresa" class="text-2xl md:text-3xl font-bold text-primary-dynamic leading-tight">
                                 Sys2N - Sistemas Personalizados
                             </h1>
-                            <!-- Slogan (personalize o texto) -->
                             <p id="slogan" class="text-sm md:text-base text-gray-600">
                                 Eficiência, Organização e Crescimento para Seu Negócio!!!
                             </p>
                         </div>
                     </div>
 
-                    <!-- Espaço vazio à direita para balancear o layout -->
                     <div class="w-[52px]"></div>
                 </div>
             </div>
         </header>
 
-        <!-- Menu de Categorias (parte do cabeçalho unificado) -->
         <div id="mobile-category-menu" class="bg-white/95 backdrop-blur-sm border-b border-gray-100 py-3 shadow-md">
             <div id="category-scroll" class="category-scroll flex overflow-x-auto px-4 space-x-3 min-h-[52px] items-center md:justify-center justify-start">
-                <!-- Categorias serão inseridas dinamicamente aqui pelo JS -->
-                <!-- Placeholder para garantir que o menu tenha conteúdo mesmo antes do carregamento -->
                 <div class="flex-shrink-0 px-4 py-2 bg-gray-200 text-transparent rounded-full text-sm font-semibold whitespace-nowrap min-w-[80px] animate-pulse">Carregando...</div>
                 <div class="flex-shrink-0 px-4 py-2 bg-gray-200 text-transparent rounded-full text-sm font-semibold whitespace-nowrap min-w-[80px] animate-pulse">Carregando...</div>
                 <div class="flex-shrink-0 px-4 py-2 bg-gray-200 text-transparent rounded-full text-sm font-semibold whitespace-nowrap min-w-[80px] animate-pulse">Carregando...</div>
@@ -374,14 +402,10 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <main class="container mx-auto px-4 pt-28 pb-8">
-        <!-- Catálogo -->
-        <div id="cardapio" class="space-y-12">
-            <!-- Categorias e itens serão inseridos aqui dinamicamente pelo JS -->
-        </div>
+        <div id="catalogo" class="space-y-12">
+            </div>
 
-        <!-- Seção de Avaliação (Personalize o link e visibilidade) -->
         <div id="avaliacao-section" class="mt-16 text-center">
             <div class="bg-white rounded-3xl p-8 shadow-xl max-w-2xl mx-auto fade-in">
                 <div class="mb-6">
@@ -389,43 +413,83 @@
                     <h3 class="text-2xl font-bold text-gray-800 mb-3">Gostou do nosso atendimento?</h3>
                     <p class="text-gray-600 text-lg">Sua opinião é muito importante para nós!</p>
                 </div>
-                <!-- Link para avaliação (personalize o href) -->
-                <a id="btn-avaliar" href="https://g.page/r/CTpJiLT0WUfOEAE/review" target="_blank" 
-                   class="inline-flex items-center px-8 py-4 bg-primary-dynamic text-white rounded-2xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg font-semibold">
+                <a id="btn-avaliar" href="https://g.page/r/CTpJiLT0WUfOEAE/review" target="_blank" rel="noopener noreferrer"
+                    class="inline-flex items-center px-8 py-4 bg-primary-dynamic text-white rounded-2xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg font-semibold">
                     <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.54-1.118l1.07-3.292a1 1 0 00-.364-1.118L3.24 8.71c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path>
-                        </svg>
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.54-1.118l1.07-3.292a1 1 0 00-.364-1.118L3.24 8.71c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path>
+                    </svg>
                     Avaliar "Loja de Mafra"
                 </a>
-			 <a id="btn2-avaliar" href="ttps://g.page/r/CdG5xQlqJUK-EBE/review" target="_blank" 
-                   class="inline-flex items-center px-8 py-4 bg-primary-dynamic text-white rounded-2xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg font-semibold">
+
+                <br>
+                
+                </br>
+
+                <a id="btn2-avaliar" href="https://g.page/r/CdG5xQlqJUK-EBE/review" target="_blank" rel="noopener noreferrer"
+                    class="inline-flex items-center px-8 py-4 bg-primary-dynamic text-white rounded-2xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg font-semibold">
                     <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.54-1.118l1.07-3.292a1 1 0 00-.364-1.118L3.24 8.71c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path>
-                        </svg>
-		     Avaliar "Loja de RN"
-                	</a>
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.54-1.118l1.07-3.292a1 1 0 00-.364-1.118L3.24 8.71c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path>
+                    </svg>
+                    Avaliar "Loja de RN"
+                </a>
                 <p id="avaliacao-message" class="mt-4 text-gray-600 text-sm"></p>
-		<p id="avaliacao2-message" class="mt-4 text-gray-600 text-sm"></p>
+                <p id="avaliacao2-message" class="mt-4 text-gray-600 text-sm"></p>
             </div>
         </div>
     </main>
 
-    <!-- Botão de Voltar ao Topo -->
     <button id="back-to-top" class="fixed bottom-6 right-6 bg-primary-dynamic text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 z-30 hidden">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
         </svg>
     </button>
 
-    <!-- Rodapé (Personalize o texto e o link do desenvolvedor) -->
-    <footer class="bg-primary-dynamic py-8 text-center text-rodape-dynamic text-sm">
-        <div class="container mx-auto px-4">
-            <p>&copy; <span id="footer-empresa">Todos os Direitos Reservados </span></p>
-            <p class="mt-1"> <a href="https://www.sys2n.com.br" target="_blank" class="link-color-dynamic hover:underline">Desenvolvido por Sys2n - Sistemas Personalizados</a></p>
-        </div>
-    </footer>
+    <footer class="bg-primary-dynamic py-8 text-rodape-dynamic text-sm link-color-dynamic">
+  <div class="container mx-auto px-4">
 
-    <!-- Scripts JavaScript -->
+    <div class="flex flex-col md:flex-row justify-between text-center md:text-left space-y-6 md:space-y-0">
+
+      <div class="md:w-1/3">
+        <p class="font-semibold">📍 Loja Mafra </p>
+        <a href="https://wa.me/554736426082?text=Olá, visualizei o catálogo e gostaria de atendimento da loja de Mafra." target="_blank" class="hover:underline inline-flex items-center gap-1">
+          Rua Independência, 583, Vila Ivete<br>Mafra - SC<br>(47) 3642 6082
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="#25D366" viewBox="0 0 32 32">
+            <path d="M16 2.93a13.07 13.07 0 0 0-11.07 19.74L2 30l7.54-2.94A13.06 13.06 0 1 0 16 2.93zm0 23.61a10.55 10.55 0 0 1-5.38-1.47l-.38-.22-4.48 1.74 1.7-4.37-.25-.4a10.56 10.56 0 1 1 9.79 4.72zm5.8-7.92c-.32-.16-1.87-.92-2.16-1.02s-.5-.16-.7.16-.8 1.02-.98 1.23-.36.24-.68.08a8.68 8.68 0 0 1-2.55-1.58 9.51 9.51 0 0 1-1.76-2.2c-.18-.32 0-.5.14-.66s.32-.36.48-.54a2.23 2.23 0 0 0 .32-.54.6.6 0 0 0 0-.58c-.08-.16-.7-1.67-.96-2.3s-.5-.54-.68-.54h-.58a1.12 1.12 0 0 0-.8.38 3.33 3.33 0 0 0-1 2.5 5.74 5.74 0 0 0 1.2 2.9 13.12 13.12 0 0 0 5.04 4.45 11.9 11.9 0 0 0 1.22.46 2.9 2.9 0 0 0 1.36.08 2.16 2.16 0 0 0 1.42-1 1.73 1.73 0 0 0 .12-1c-.06-.08-.3-.14-.62-.3z"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="md:w-1/3 text-center">
+        <p class="font-semibold">📍 Loja Rio Negro </p>
+        <a href="https://wa.me/554736453389?text=Olá, visualizei o catálogo e gostaria de atendimento da loja de Rio Negro." target="_blank" class="hover:underline inline-flex items-center gap-1">
+          Rua Saturnino Olinto, 1648, Centro<br>Rio Negro - PR<br>(47) 3645 3389
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="#25D366" viewBox="0 0 32 32">
+            <path d="M16 2.93a13.07 13.07 0 0 0-11.07 19.74L2 30l7.54-2.94A13.06 13.06 0 1 0 16 2.93zm0 23.61a10.55 10.55 0 0 1-5.38-1.47l-.38-.22-4.48 1.74 1.7-4.37-.25-.4a10.56 10.56 0 1 1 9.79 4.72zm5.8-7.92c-.32-.16-1.87-.92-2.16-1.02s-.5-.16-.7.16-.8 1.02-.98 1.23-.36.24-.68.08a8.68 8.68 0 0 1-2.55-1.58 9.51 9.51 0 0 1-1.76-2.2c-.18-.32 0-.5.14-.66s.32-.36.48-.54a2.23 2.23 0 0 0 .32-.54.6.6 0 0 0 0-.58c-.08-.16-.7-1.67-.96-2.3s-.5-.54-.68-.54h-.58a1.12 1.12 0 0 0-.8.38 3.33 3.33 0 0 0-1 2.5 5.74 5.74 0 0 0 1.2 2.9 13.12 13.12 0 0 0 5.04 4.45 11.9 11.9 0 0 0 1.22.46 2.9 2.9 0 0 0 1.36.08 2.16 2.16 0 0 0 1.42-1 1.73 1.73 0 0 0 .12-1c-.06-.08-.3-.14-.62-.3z"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="md:w-1/3 text-center md:text-right">
+        <p class="font-semibold">🕒 Horário de Atendimento</p>
+        <p>Seg a Sex: 08h30min às 18h<br>Sáb: 09h às 13h:30min<br>Domingo: Fechado</p>
+      </div>
+
+    </div>
+
+    <div class="mt-6 text-center">
+      <p><hr><br><a href="https://www.sys2n.com.br" target="_blank" class="link-color-dynamic hover:underline">Desenvolvido por Sys2n - Sistemas Personalizados<br>&copy; Todos os Direitos Reservados</a></p>
+    </div>
+
+  </div>
+</footer>
+
+    <div id="zoom-overlay" class="zoom-overlay">
+        <div class="zoom-image-container">
+            <img id="zoom-image" class="zoom-image" src="" alt="Imagem Ampliada">
+            <button id="zoom-close-button" class="zoom-close-button">✖</button>
+        </div>
+    </div>
+
     <script>
         // Variáveis globais
         let dadosCatalogo = {};
@@ -438,7 +502,7 @@
             moeda: "R$", // Personalize
             exibirAvaliacao: true, // Personalize (true/false)
             googleMeuNegocioUrl: "https://g.page/r/CTpJiLT0WUfOEAE/review", // Personalize seu link de avaliação
-	    googleMeuNegocio2Url: "https://g.page/r/CdG5xQlqJUK-EBE/review", // Personalize seu link 2 de avaliação
+            googleMeuNegocio2Url: "https://g.page/r/CdG5xQlqJUK-EBE/review", // Personalize seu link 2 de avaliação
             // Cores são definidas diretamente no CSS :root
             // Meta tags são definidas diretamente no <head>
         };
@@ -461,24 +525,27 @@
         const logoTextMobile = document.getElementById('logo-text-mobile');
         const logoDesktop = document.getElementById('logo');
         const nomeEmpresaHeader = document.getElementById('nome-empresa');
-        const sloganHeader = document.getElementById('slogan'); 
+        const sloganHeader = document.getElementById('slogan');
         const categoryScrollContainer = document.getElementById('category-scroll');
-        const cardapioContainer = document.getElementById('cardapio');
+        const catalogoContainer = document.getElementById('catalogo');
         const avaliacaoSection = document.getElementById('avaliacao-section');
         const btnAvaliar = document.getElementById('btn-avaliar');
-	const btn2Avaliar = document.getElementById('btn2-avaliar');
+        const btn2Avaliar = document.getElementById('btn2-avaliar');
         const avaliacaoMessage = document.getElementById('avaliacao-message');
-	const avaliacao2Message = document.getElementById('avaliacao2-message');
+        const avaliacao2Message = document.getElementById('avaliacao2-message');
         const backToTopButton = document.getElementById('back-to-top');
-        const footerEmpresa = document.getElementById('footer-empresa');
+        const unifiedHeader = document.getElementById('unified-header'); // Novo elemento para o cabeçalho unificado
+
+        const zoomOverlay = document.getElementById('zoom-overlay');
+        const zoomImage = document.getElementById('zoom-image');
+        const zoomCloseButton = document.getElementById('zoom-close-button');
+
 
         // A função aplicarConfiguracoesGlobais foi removida/simplificada, pois as configurações são estáticas
         // Apenas ajustamos elementos que podem ter fallback ou lógica de visibilidade
         function aplicarConfiguracoesIniciais() {
             document.title = EMPRESA_CONFIG.tituloPaginaIdioma || EMPRESA_CONFIG.nomeEmpresa || 'Catálogo Online';
             nomeEmpresaHeader.textContent = EMPRESA_CONFIG.nomeEmpresa;
-            footerEmpresa.textContent = EMPRESA_CONFIG.nomeEmpresa;
-
             if (EMPRESA_CONFIG.sloganEmpresa) {
                 sloganHeader.textContent = EMPRESA_CONFIG.sloganEmpresa;
                 sloganHeader.classList.remove('hidden');
@@ -494,7 +561,7 @@
                 logoMobile.classList.remove('hidden');
                 logoTextMobile.classList.add('hidden');
             } else {
-                const nomeParaLogoTexto = EMPRESA_CONFIG.nomeEmpresa || ''; 
+                const nomeParaLogoTexto = EMPRESA_CONFIG.nomeEmpresa || '';
                 logoMobile.classList.add('hidden');
                 logoTextMobile.textContent = nomeParaLogoTexto.split(' ').map(n => n[0]).join('');
                 logoTextMobile.classList.remove('hidden');
@@ -512,22 +579,19 @@
             // Seção de Avaliação
             if (EMPRESA_CONFIG.exibirAvaliacao && EMPRESA_CONFIG.googleMeuNegocioUrl && EMPRESA_CONFIG.googleMeuNegocioUrl && EMPRESA_CONFIG.googleMeuNegocio2Url !== 'N/A') {
                 btnAvaliar.href = EMPRESA_CONFIG.googleMeuNegocioUrl;
-		btn2Avaliar.href = EMPRESA_CONFIG.googleMeuNegocio2Url;
+                btn2Avaliar.href = EMPRESA_CONFIG.googleMeuNegocio2Url;
                 avaliacaoSection.style.display = 'block';
             } else {
                 avaliacaoSection.style.display = 'none';
-		
             }
         }
-
 
         // Função para carregar dados do catálogo (agora de um Google Apps Script)
         async function carregarDadosCatalogo() {
             // URL do seu Google Apps Script publicado como Aplicativo Web
             // MUITO IMPORTANTE: Substitua este URL pelo SEU REAL URL do Apps Script.
             // Esta linha está aproximadamente na linha 501 do código.
-            const APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx5jorY33EHo0M5CofWN7T8Ze83rKxcuXVu8LHLiaMEmelKp_FFXH9kSTwxs-9Z56dH/exec'; 
-
+            const APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx5jorY33EHo0M5CofWN7T8Ze83rKxcuXVu8LHLiaMEmelKp_FFXH9kSTwxs-9Z56dH/exec';
             try {
                 const response = await fetch(APPS_SCRIPT_WEB_APP_URL);
                 if (!response.ok) {
@@ -542,6 +606,7 @@
                 if (dadosRecebidos.error) {
                     throw new Error(`Erro do Apps Script: ${dadosRecebidos.error}`);
                 }
+
                 // Agora esperamos apenas 'categorias' diretamente
                 if (!dadosRecebidos.categorias) {
                     throw new Error("Estrutura de dados inválida recebida do Apps Script. Esperava 'categorias'.");
@@ -551,12 +616,12 @@
 
                 // Renderiza o cardápio e os menus
                 renderizarCategoriasMenu(dadosCatalogo.categorias);
-                renderizarCardapio(dadosCatalogo.categorias);
+                renderizarcatalogo(dadosCatalogo.categorias);
 
             } catch (error) {
                 console.error("Erro ao carregar dados do catálogo:", error);
                 // Exibir mensagem de erro mais amigável no UI
-                cardapioContainer.innerHTML = `
+                catalogoContainer.innerHTML = `
                     <div class="text-center py-10 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                         <strong class="font-bold">Erro ao carregar o catálogo!</strong>
                         <span class="block sm:inline"> Por favor, verifique os seguintes pontos:</span>
@@ -576,6 +641,10 @@
                 document.body.style.overflow = ''; // Restaura o scroll do body
                 // Adiciona um pequeno atraso para garantir que as seções estejam renderizadas
                 setTimeout(() => {
+                    // Inicializa o IntersectionObserver
+                    document.querySelectorAll('.category-section').forEach(section => {
+                        categoryObserver.observe(section);
+                    });
                     updateActiveCategoryInMenu('all'); // Ativa "Todos" por padrão
                 }, 100); // Pequeno atraso para garantir que o DOM esteja pronto
             }
@@ -584,99 +653,137 @@
         // Função para renderizar as categorias no menu horizontal
         function renderizarCategoriasMenu(categorias) {
             categoryScrollContainer.innerHTML = ''; // Limpa o conteúdo existente
-            
+
             // Adiciona a categoria "Todos"
             const allCategoryItem = document.createElement('div');
             allCategoryItem.className = 'category-item flex-shrink-0 px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-semibold whitespace-nowrap cursor-pointer hover-primary-dynamic';
             allCategoryItem.textContent = 'Todos';
-            allCategoryItem.dataset.id = 'all';
-            allCategoryItem.onclick = () => {
-                renderizarCardapio(dadosCatalogo.categorias); // Mostra todas as categorias
-                updateActiveCategoryInMenu('all');
-                scrollToTop(); // Volta para o topo ao clicar em "Todos"
-            };
+            allCategoryItem.dataset.category = 'all';
+            allCategoryItem.onclick = () => scrollToCategory('all');
             categoryScrollContainer.appendChild(allCategoryItem);
 
-            // Filtra e ordena categorias ativas
-            const categoriasAtivasOrdenadas = categorias
-                .filter(cat => cat.ativa)
-                .sort((a, b) => (a.ordemExibicao || 9999) - (b.ordemExibicao || 9999)); // Garante que categorias sem ordem vão para o fim
-
-            categoriasAtivasOrdenadas.forEach(categoria => {
+            categorias.forEach(categoria => {
                 const categoryItem = document.createElement('div');
                 categoryItem.className = 'category-item flex-shrink-0 px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-semibold whitespace-nowrap cursor-pointer hover-primary-dynamic';
-                categoryItem.textContent = categoria.nome; // Usa Título_Exibição como nome
-                categoryItem.dataset.id = categoria.id; // Usa Nome_Categoria como ID
-                categoryItem.onclick = () => scrollToCategory(categoria.id);
+                categoryItem.textContent = categoria.nome;
+                categoryItem.dataset.category = categoria.nome;
+                categoryItem.onclick = () => scrollToCategory(categoria.nome);
                 categoryScrollContainer.appendChild(categoryItem);
             });
         }
 
-        // Função para renderizar o conteúdo do cardápio
-        function renderizarCardapio(categorias) {
-            cardapioContainer.innerHTML = ''; // Limpa o conteúdo existente
+        // Função para renderizar o catálogo
+        function renderizarcatalogo(categorias) {
+            catalogoContainer.innerHTML = ''; // Limpa o conteúdo existente
 
-            if (!categorias || categorias.length === 0) {
-                cardapioContainer.innerHTML = '<p class="text-center text-gray-500 text-lg py-10">Nenhuma categoria ou produto encontrado.</p>';
-                return;
+            // Adiciona uma seção "Todos" se houver itens em alguma categoria
+            const allItems = categorias.flatMap(cat => cat.itens || []);
+            if (allItems.length > 0) {
+                const allSection = criarSecaoCategoria('Todos', allItems, 'all');
+                catalogoContainer.appendChild(allSection);
             }
 
-            // Ordena as categorias pela Ordem_Exibição
-            const categoriasOrdenadas = [...categorias].sort((a, b) => (a.ordemExibicao || 9999) - (b.ordemExibicao || 9999));
-
-            categoriasOrdenadas.forEach(categoria => {
-                // Renderiza apenas categorias ativas
-                if (categoria.ativa) {
-                    const categoriaSecao = document.createElement('section');
-                    categoriaSecao.id = categoria.id; // ID da seção é o Nome_Categoria
-                    categoriaSecao.className = 'categoria-secao mb-8 p-4 bg-white rounded-xl shadow-md fade-in'; // Adicionado fade-in
-
-                    // Filtra itens disponíveis e os ordena se houver Classificação_Adicional (ou outro critério)
-                    const itensDisponiveis = categoria.itens.filter(item => item.disponivel);
-                    // Adicione aqui a lógica de ordenação de itens se necessário, por exemplo:
-                    // itensDisponiveis.sort((a, b) => a.nome.localeCompare(b.nome)); 
-
-                    categoriaSecao.innerHTML = `
-                        <h2 class="text-2xl font-bold text-primary-dynamic mb-4 border-b-2 border-primary-dynamic pb-2">${categoria.nome}</h2>
-                        <p class="text-gray-600 mb-6">${categoria.descricao || ''}</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            ${itensDisponiveis.map(item => `
-                                <div class="card-hover bg-white rounded-xl shadow-md overflow-hidden flex flex-col menu-item-container">
-                                    <div class="menu-item-image-wrapper">
-                                        <img src="${item.imagem || 'https://placehold.co/300x200/D2691E/FFFFFF?text=Sem+Imagem'}" 
-                                             alt="${item.nome}" class="w-full h-48 object-cover">
-                                        ${item.disponivel === false ? `
-                                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                                                <span class="text-white text-xl font-bold">Indisponível</span>
-                                            </div>
-                                        ` : ''}
-                                    </div>
-                                    <div class="p-4 flex flex-col flex-grow menu-item-content">
-                                        <div class="menu-item-title-price mb-2">
-                                            <h3 class="text-lg font-semibold text-gray-800 leading-tight">${item.nome}</h3>
-                                            <span class="text-xl font-bold text-secondary-dynamic">${EMPRESA_CONFIG.moeda} ${item.preco.toFixed(2).replace('.', ',')}</span>
-                                        </div>
-                                        ${item.descricao ? `<p class="text-gray-600 text-sm flex-grow">${item.descricao}</p>` : ''}
-                                        ${item.observacoes ? `<p class="text-gray-500 text-xs mt-2">${item.observacoes}</p>` : ''}
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                    cardapioContainer.appendChild(categoriaSecao);
+            categorias.forEach(categoria => {
+                if (categoria.itens && categoria.itens.length > 0) {
+                    const section = criarSecaoCategoria(categoria.nome, categoria.itens, categoria.nome);
+                    catalogoContainer.appendChild(section);
                 }
             });
         }
 
-        // Função para filtrar o cardápio com base na busca
-        function filtrarCardapio(termo) {
-            const termoLowerCase = termo.toLowerCase();
-            searchItemsContainer.innerHTML = ''; // Limpa resultados anteriores
-            searchItemsContainer.classList.add('hidden');
+        // Função auxiliar para criar a seção de cada categoria
+        function criarSecaoCategoria(nomeCategoria, itens, idCategoria) {
+            const section = document.createElement('section');
+            section.id = formatarId(idCategoria);
+            section.className = 'category-section fade-in';
+            section.innerHTML = `
+                <h2 class="text-3xl font-bold text-color-dynamic mb-6 pt-4">${nomeCategoria}</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                    </div>
+            `;
+            const itemsGrid = section.querySelector('div.grid');
+
+            itens.forEach(item => {
+                const card = renderizarItemCard(item);
+                itemsGrid.appendChild(card);
+            });
+
+            return section;
+        }
+
+        // Função para renderizar um card de item
+        function renderizarItemCard(item) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-xl shadow-lg p-4 flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 card-hover';
+
+            let imageUrl = item.imagem && item.imagem !== 'N/A' ? item.imagem : 'https://via.placeholder.com/150/F5F5F5/808080?text=Sem+Imagem';
+            
+            // Container da Imagem com botão de ampliar
+            const imageContainer = document.createElement('div');
+            imageContainer.className = 'relative flex-shrink-0 w-full sm:w-40 h-40 rounded-lg overflow-hidden';
+            imageContainer.innerHTML = `
+                <img src="${imageUrl}" alt="${item.nome}" class="w-full h-full object-cover rounded-lg">
+                ${item.imagem && item.imagem !== 'N/A' ? `
+                    <button class="zoom-image-button" onclick="abrirModalImagem('${item.imagem}')">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 3a1 1 0 00-1 1v4H5a1 1 0 100 2h4v4a1 1 0 102 0v-4h4a1 1 0 100-2h-4V4a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        Ampliar
+                    </button>
+                ` : ''}
+            `;
+            card.appendChild(imageContainer);
+
+            // Conteúdo do Produto (à direita da imagem)
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'flex flex-col flex-grow w-full text-center sm:text-left'; // w-full para ocupar o espaço restante
+            
+            contentDiv.innerHTML = `
+                <h3 class="text-xl font-semibold text-gray-800 mb-1">${item.nome}</h3>
+                ${item.descricao && item.descricao !== 'N/A' ? `<p class="text-gray-600 text-sm mb-2">${item.descricao}</p>` : ''}
+                
+                <div class="flex items-center justify-between mt-auto">
+                    ${item.preco && item.preco !== 'N/A' ? `<span class="text-2xl font-bold text-primary-dynamic price-highlight">${EMPRESA_CONFIG.moeda} ${parseFloat(item.preco).toFixed(2).replace('.', ',')}</span>` : ''}
+                    ${item.link && item.link !== 'N/A' ? `
+                        <a href="${item.link}" target="_blank" rel="noopener noreferrer" 
+                           class="inline-flex items-center bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-green-600 transition-colors shadow-md">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.477 2 2 6.477 2 12c0 3.314 1.614 6.287 4.09 8.16L5 22l2.09-1.09c.772.138 1.57.214 2.39.214 5.523 0 10-4.477 10-10S17.523 2 12 2zm3.626 12.008c-.2-.097-1.18-.582-1.36-.64s-.31-.097-.43.097-.497.64-.614.776-.237.146-.43.048c-.2-.097-.847-.312-1.614-.997-.597-.53-1.002-1.192-1.12-1.388s-.012-.29.085-.387c.089-.097.197-.2.29-.323s.12-.23.18-.387c.06-.146.03-.274-.015-.387-.045-.097-.43-.107-.614-.107-.184 0-.39.097-.597.29-.207.194-.8 1.76-.8 2.147s.097.47.194.597c.097.12.924 1.488 2.247 2.05s2.05.29 2.428.252c.38-.039 1.18-.485 1.36-.97s.184-.89-.116-.97z"/>
+                            </svg>
+                            WhatsApp
+                        </a>
+                    ` : ''}
+                </div>
+            `;
+            card.appendChild(contentDiv);
+
+            return card;
+        }
+
+        // Funções de busca
+        function alternarBusca() {
+            searchOverlay.classList.toggle('hidden');
+            if (!searchOverlay.classList.contains('hidden')) {
+                searchInput.focus();
+                document.body.style.overflow = 'hidden'; // Evita scroll do body
+            } else {
+                document.body.style.overflow = ''; // Restaura scroll do body
+                searchInput.value = ''; // Limpa o input
+                searchItemsContainer.innerHTML = ''; // Limpa resultados
+                searchEmptyState.classList.remove('hidden');
+                searchItemsContainer.classList.add('hidden');
+                noResultsMessage.classList.add('hidden');
+            }
+        }
+
+        function buscarProdutos() {
+            const query = searchInput.value.toLowerCase().trim();
+            searchItemsContainer.innerHTML = '';
             searchEmptyState.classList.add('hidden');
             noResultsMessage.classList.add('hidden');
+            searchItemsContainer.classList.add('hidden');
 
-            if (termoLowerCase.length < 2) {
+            if (query.length < 2) {
                 searchEmptyState.classList.remove('hidden');
                 return;
             }
@@ -684,176 +791,182 @@
             const resultados = [];
             dadosCatalogo.categorias.forEach(categoria => {
                 categoria.itens.forEach(item => {
-                    const nomeMatch = item.nome.toLowerCase().includes(termoLowerCase);
-                    const descricaoMatch = item.descricao && item.descricao.toLowerCase().includes(termoLowerCase);
-                    const categoriaMatch = categoria.nome.toLowerCase().includes(termoLowerCase); // Busca por nome de categoria
-                    
-                    if (item.disponivel && (nomeMatch || descricaoMatch || categoriaMatch)) {
-                        resultados.push({ ...item, categoriaNome: categoria.nome, categoriaId: categoria.id });
+                    const nome = item.nome ? item.nome.toLowerCase() : '';
+                    const descricao = item.descricao ? item.descricao.toLowerCase() : '';
+                    const categoriaNome = categoria.nome ? categoria.nome.toLowerCase() : '';
+
+                    if (nome.includes(query) || descricao.includes(query) || categoriaNome.includes(query)) {
+                        resultados.push(item);
                     }
                 });
             });
 
             if (resultados.length > 0) {
-                searchItemsContainer.classList.remove('hidden');
                 resultados.forEach(item => {
                     const searchItemDiv = document.createElement('div');
-                    searchItemDiv.className = 'search-item p-3 border-b border-gray-100 last:border-b-0 cursor-pointer';
+                    searchItemDiv.className = 'bg-gray-50 p-3 rounded-lg flex items-center space-x-3';
                     searchItemDiv.innerHTML = `
-                        <h4 class="font-semibold text-gray-800">${highlightText(item.nome, termoLowerCase)}</h4>
-                        <p class="text-sm text-gray-600">${highlightText(item.descricao || '', termoLowerCase)}</p>
-                        <p class="text-xs text-gray-500 mt-1">Categoria: ${highlightText(item.categoriaNome, termoLowerCase)}</p>
-                        <span class="text-lg font-bold text-secondary-dynamic">${EMPRESA_CONFIG.moeda} ${item.preco.toFixed(2).replace('.', ',')}</span>
+                        <img src="${item.imagem && item.imagem !== 'N/A' ? item.imagem : 'https://via.placeholder.com/60/F5F5F5/808080?text=S/I'}" 
+                             alt="${item.nome}" class="w-16 h-16 object-cover rounded-md">
+                        <div class="flex-grow">
+                            <h4 class="font-semibold text-gray-800">${item.nome}</h4>
+                            ${item.descricao && item.descricao !== 'N/A' ? `<p class="text-gray-600 text-sm line-clamp-1">${item.descricao}</p>` : ''}
+                            ${item.preco && item.preco !== 'N/A' ? `<p class="text-primary-dynamic font-bold">${EMPRESA_CONFIG.moeda} ${parseFloat(item.preco).toFixed(2).replace('.', ',')}</p>` : ''}
+                        </div>
+                        ${item.link && item.link !== 'N/A' ? `
+                            <a href="${item.link}" target="_blank" rel="noopener noreferrer" 
+                               class="flex-shrink-0 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.477 2 2 6.477 2 12c0 3.314 1.614 6.287 4.09 8.16L5 22l2.09-1.09c.772.138 1.57.214 2.39.214 5.523 0 10-4.477 10-10S17.523 2 12 2zm3.626 12.008c-.2-.097-1.18-.582-1.36-.64s-.31-.097-.43.097-.497.64-.614.776-.237.146-.43.048c-.2-.097-.847-.312-1.614-.997-.597-.53-1.002-1.192-1.12-1.388s-.012-.29.085-.387c.089-.097.197-.2.29-.323s.12-.23.18-.387c.06-.146.03-.274-.015-.387-.045-.097-.43-.107-.614-.107-.184 0-.39.097-.597.29-.207.194-.8 1.76-.8 2.147s.097.47.194.597c.097.12.924 1.488 2.247 2.05s2.05.29 2.428.252c.38-.039 1.18-.485 1.36-.97s.184-.89-.116-.97z"/>
+                                </svg>
+                            </a>
+                        ` : ''}
                     `;
-                    searchItemDiv.onclick = () => {
-                        scrollToCategory(item.categoriaId); // Rola para a categoria do item
-                        closeSearchOverlay(); // Fecha o overlay de busca
-                    };
                     searchItemsContainer.appendChild(searchItemDiv);
                 });
+                searchItemsContainer.classList.remove('hidden');
             } else {
                 noResultsMessage.classList.remove('hidden');
             }
         }
 
-        // Função auxiliar para destacar texto na busca
-        function highlightText(text, searchTerm) {
-            if (!text || !searchTerm) return text;
-            const regex = new RegExp(`(${searchTerm})`, 'gi');
-            return text.replace(regex, '<span class="highlight">$1</span>');
-        }
-
-        // Função para abrir/fechar o overlay de busca
-        function openSearchOverlay() {
-            searchOverlay.classList.remove('hidden');
-            setTimeout(() => {
-                searchOverlay.classList.add('opacity-100');
-                searchContainer.classList.add('active');
-                searchInput.focus();
-            }, 10); // Pequeno delay para a transição
-            document.body.style.overflow = 'hidden'; // Impede o scroll do body
-        }
-
-        function closeSearchOverlay() {
-            searchOverlay.classList.remove('opacity-100');
-            searchContainer.classList.remove('active');
-            setTimeout(() => {
-                searchOverlay.classList.add('hidden');
-                searchInput.value = '';
-                filtrarCardapio(''); // Limpa e reseta os resultados da busca
-            }, 300); // Espera a transição terminar
-            document.body.style.overflow = ''; // Restaura o scroll do body
-        }
-
-        // Função para rolar para uma seção de categoria
+        // Função para rolar para a categoria e ativar o menu
         function scrollToCategory(id) {
-            const section = document.getElementById(id);
-            if (section) {
-                // Ajusta o scroll para compensar o cabeçalho fixo
-                const headerHeight = document.getElementById('unified-header').offsetHeight;
-                const offsetTop = section.getBoundingClientRect().top + window.scrollY - headerHeight - 20; // 20px de padding extra
-                window.scrollTo({ top: offsetTop, behavior: 'smooth' });
-                updateActiveCategoryInMenu(id); // Atualiza o item ativo no menu
+            const element = document.getElementById(formatarId(id));
+            if (element) {
+                // Obter a altura do cabeçalho fixo dinamicamente
+                const headerOffset = unifiedHeader.offsetHeight + 10; // Adiciona um pequeno padding extra
+                const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = elementPosition - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
             }
+            // A atualização da categoria ativa no menu será feita pelo IntersectionObserver
+            // Não chame updateActiveCategoryInMenu aqui diretamente para evitar conflito com o observer.
+            // O observer irá pegar a categoria correta após a rolagem.
         }
 
-        // Função para rolar para o topo
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Função para formatar IDs (remove espaços e caracteres especiais)
+        function formatarId(text) {
+            return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-*|-*$/g, '');
         }
 
-        // Função para atualizar o botão de voltar ao topo
-        function updateBackToTopButtonVisibility() {
-            if (window.scrollY > 300) {
+        // Função para atualizar a categoria ativa no menu de categorias
+        function updateActiveCategoryInMenu(activeId) {
+            const categoryItems = document.querySelectorAll('.category-item');
+            categoryItems.forEach(item => {
+                if (item.dataset.category === activeId) {
+                    item.classList.add('active');
+                    // Rola o item ativo para o centro da visualização do menu de categorias
+                    item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        // Observador de Interseção para atualizar categoria ativa ao rolar
+        const observerOptions = {
+            root: null, // viewport
+            // Ajusta a margem da raiz para considerar o cabeçalho fixo
+            // A categoria será considerada "intersecção" quando estiver centralizada,
+            // ou logo abaixo do cabeçalho, dependendo da necessidade.
+            // Ex: -HeaderHeightpx 0px -Y% 0px
+            // Experimente ajustar o "-50% 0px -49% 0px" para "-UNIFIED_HEADER_HEIGHT_PX 0px -Y_PERCENTAGE 0px"
+            // O cálculo da altura do header deve ser feito dinamicamente.
+            rootMargin: '0px 0px -70% 0px', // A seção é considerada visível quando a maior parte dela (30% da altura total da viewport) está acima do cabeçalho. Ajuste conforme necessário.
+            threshold: 0 // Qualquer interseção dispara
+        };
+
+        let currentActiveCategory = 'all'; // Mantém o controle da categoria atualmente ativa para evitar atualizações redundantes
+
+        const categoryObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const categoryId = entry.target.id;
+                    const formattedCategoryId = formatarId(categoryId); // Garante que o ID formatado seja usado
+                    if (currentActiveCategory !== formattedCategoryId) {
+                        currentActiveCategory = formattedCategoryId;
+                        updateActiveCategoryInMenu(formattedCategoryId);
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Função para abrir o modal de imagem
+        function abrirModalImagem(src) {
+            zoomImage.src = src;
+            zoomOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Evita scroll do body
+        }
+
+        // Função para fechar o modal de imagem
+        function fecharModalImagem() {
+            zoomOverlay.classList.remove('active');
+            document.body.style.overflow = ''; // Restaura scroll do body
+        }
+
+
+        // Event Listeners
+        window.addEventListener('DOMContentLoaded', () => {
+            aplicarConfiguracoesIniciais();
+            carregarDadosCatalogo();
+
+            // O IntersectionObserver é inicializado dentro de carregarDadosCatalogo.finally
+        });
+
+        // Eventos de busca
+        searchBtnMobile.addEventListener('click', alternarBusca);
+        searchBtnDesktop.addEventListener('click', alternarBusca);
+        closeSearchButton.addEventListener('click', alternarBusca);
+        searchInput.addEventListener('input', buscarProdutos);
+
+        // Fechar busca ao clicar fora do container de busca
+        searchOverlay.addEventListener('click', (event) => {
+            if (event.target === searchOverlay) {
+                alternarBusca();
+            }
+        });
+
+        // Fechar busca com tecla ESC
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !searchOverlay.classList.contains('hidden')) {
+                alternarBusca();
+            }
+        });
+
+        // Botão de Voltar ao Topo
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 200) { // Mostra o botão após rolar 200px
                 backToTopButton.classList.remove('hidden');
             } else {
-                backToTopButton.classList.add('hidden'); 
+                backToTopButton.classList.add('hidden');
             }
-        }
+        });
 
-        // Função para atualizar o estilo da categoria ativa no menu de categorias
-        function updateActiveCategoryInMenu(activeId = null) {
-            const currentScrollPos = window.scrollY;
-            const headerHeight = document.getElementById('unified-header').offsetHeight;
-            let foundActive = false;
-
-            // Remove 'active' de todos os itens do menu
-            document.querySelectorAll('.category-item').forEach(item => {
-                item.classList.remove('active');
-                item.classList.add('bg-gray-200', 'text-gray-700');
-                item.classList.remove('bg-primary-dynamic', 'text-white');
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
+        });
 
-            // Se um ID ativo foi passado (ex: clique no menu ou busca)
-            if (activeId) {
-                const itemToActivate = categoryScrollContainer.querySelector(`[data-id="${activeId}"]`);
-                if (itemToActivate) {
-                    itemToActivate.classList.add('active');
-                    itemToActivate.classList.remove('bg-gray-200', 'text-gray-700');
-                    itemToActivate.classList.add('bg-primary-dynamic', 'text-white');
-                    itemToActivate.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                }
-                return; // Sai da função, pois a ativação foi manual
-            }
-
-            // Ativação baseada no scroll
-            document.querySelectorAll('.categoria-secao').forEach(section => {
-                // Considera a seção ativa se seu topo estiver dentro da área visível abaixo do header
-                if (currentScrollPos + headerHeight >= section.offsetTop &&
-                    currentScrollPos + headerHeight < section.offsetTop + section.offsetHeight) {
-                    
-                    const categoryId = section.id;
-                    const menuItem = categoryScrollContainer.querySelector(`[data-id="${categoryId}"]`);
-                    if (menuItem) {
-                        menuItem.classList.add('active');
-                        menuItem.classList.remove('bg-gray-200', 'text-gray-700');
-                        menuItem.classList.add('bg-primary-dynamic', 'text-white');
-                        menuItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                    }
-                    foundActive = true;
-                }
-            });
-
-            // Se nenhuma categoria específica estiver visível (ex: no topo da página antes da primeira seção)
-            if (!foundActive) {
-                const allCategoryItem = categoryScrollContainer.querySelector(`[data-id="all"]`);
-                if (allCategoryItem) {
-                    allCategoryItem.classList.add('active');
-                    allCategoryItem.classList.remove('bg-gray-200', 'text-gray-700');
-                    allCategoryItem.classList.add('bg-primary-dynamic', 'text-white');
-                    allCategoryItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                }
-            }
-        }
-
-        // --- Event Listeners ---
-        searchBtnMobile.addEventListener('click', openSearchOverlay);
-        searchBtnDesktop.addEventListener('click', openSearchOverlay);
-        closeSearchButton.addEventListener('click', closeSearchOverlay);
-        searchOverlay.addEventListener('click', (e) => {
-            if (e.target === searchOverlay) {
-                closeSearchOverlay();
+        // Event Listeners para o Modal de Imagem
+        zoomCloseButton.addEventListener('click', fecharModalImagem);
+        zoomOverlay.addEventListener('click', (event) => {
+            if (event.target === zoomOverlay) {
+                fecharModalImagem();
             }
         });
-        searchInput.addEventListener('input', (e) => {
-            filtrarCardapio(e.target.value);
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && zoomOverlay.classList.contains('active')) {
+                fecharModalImagem();
+            }
         });
 
-        backToTopButton.addEventListener('click', scrollToTop);
-        window.addEventListener('scroll', () => {
-            updateBackToTopButtonVisibility();
-            // Debounce para updateActiveCategoryInMenu para evitar execuções excessivas
-            clearTimeout(currentScrollTimeout);
-            currentScrollTimeout = setTimeout(() => {
-                updateActiveCategoryInMenu();
-            }, 100); // Ajuste o tempo conforme necessário
-        });
-
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', () => {
-            aplicarConfiguracoesIniciais(); // Aplica as configurações hardcoded
-            carregarDadosCatalogo(); // Carrega apenas categorias e itens
-        });
     </script>
 </body>
 </html>
