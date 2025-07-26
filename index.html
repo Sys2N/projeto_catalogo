@@ -745,8 +745,7 @@
                 
                 <div class="flex items-center justify-between mt-auto">
                     ${item.preco && item.preco !== 'N/A' ? `<span class="text-2xl font-bold text-primary-dynamic price-highlight">${EMPRESA_CONFIG.moeda} ${parseFloat(item.preco).toFixed(2).replace('.', ',')}</span>` : ''}
-                    ` : ''}
-                </div>
+                    </div>
                 ${item.observacoes && item.observacoes !== 'N/A' ? `<p class="text-gray-600 text-sm mb-2">${item.observacoes}</p>` : ''}
             `;
             card.appendChild(contentDiv);
@@ -787,9 +786,11 @@
                 categoria.itens.forEach(item => {
                     const nome = item.nome ? item.nome.toLowerCase() : '';
                     const descricao = item.descricao ? item.descricao.toLowerCase() : '';
+                    const classificacaoAdicional = item.classificacaoAdicional ? item.classificacaoAdicional.toLowerCase() : '';
+                    const observacoes = item.observacoes ? item.observacoes.toLowerCase() : '';
                     const categoriaNome = categoria.nome ? categoria.nome.toLowerCase() : '';
 
-                    if (nome.includes(query) || descricao.includes(query) || categoriaNome.includes(query)) {
+                    if (nome.includes(query) || descricao.includes(query) || classificacaoAdicional.includes(query) || observacoes.includes(query) || categoriaNome.includes(query)) {
                         resultados.push(item);
                     }
                 });
@@ -805,17 +806,11 @@
                         <div class="flex-grow">
                             <h4 class="font-semibold text-gray-800">${item.nome}</h4>
                             ${item.descricao && item.descricao !== 'N/A' ? `<p class="text-gray-600 text-sm line-clamp-1">${item.descricao}</p>` : ''}
+                            ${item.classificacaoAdicional && item.classificacaoAdicional !== 'N/A' ? `<p class="text-gray-600 text-sm line-clamp-1">${item.classificacaoAdicional}</p>` : ''}
                             ${item.preco && item.preco !== 'N/A' ? `<p class="text-primary-dynamic font-bold">${EMPRESA_CONFIG.moeda} ${parseFloat(item.preco).toFixed(2).replace('.', ',')}</p>` : ''}
+                            ${item.observacoes && item.observacoes !== 'N/A' ? `<p class="text-gray-600 text-sm line-clamp-1">${item.observacoes}</p>` : ''}
                         </div>
-                        ${item.link && item.link !== 'N/A' ? `
-                            <a href="${item.link}" target="_blank" rel="noopener noreferrer" 
-                               class="flex-shrink-0 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2C6.477 2 2 6.477 2 12c0 3.314 1.614 6.287 4.09 8.16L5 22l2.09-1.09c.772.138 1.57.214 2.39.214 5.523 0 10-4.477 10-10S17.523 2 12 2zm3.626 12.008c-.2-.097-1.18-.582-1.36-.64s-.31-.097-.43.097-.497.64-.614.776-.237.146-.43.048c-.2-.097-.847-.312-1.614-.997-.597-.53-1.002-1.192-1.12-1.388s-.012-.29.085-.387c.089-.097.197-.2.29-.323s.12-.23.18-.387c.06-.146.03-.274-.015-.387-.045-.097-.43-.107-.614-.107-.184 0-.39.097-.597.29-.207.194-.8 1.76-.8 2.147s.097.47.194.597c.097.12.924 1.488 2.247 2.05s2.05.29 2.428.252c.38-.039 1.18-.485 1.36-.97s.184-.89-.116-.97z"/>
-                                </svg>
-                            </a>
-                        ` : ''}
-                    `;
+                        `;
                     searchItemsContainer.appendChild(searchItemDiv);
                 });
                 searchItemsContainer.classList.remove('hidden');
