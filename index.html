@@ -746,6 +746,7 @@
                 <div class="flex items-center justify-between mt-auto">
                     ${item.preco && item.preco !== 'N/A' ? `<span class="text-2xl font-bold text-primary-dynamic price-highlight">${EMPRESA_CONFIG.moeda} ${parseFloat(item.preco).toFixed(2).replace('.', ',')}</span>` : ''}
                     </div>
+                    <hr>
                 ${item.observacoes && item.observacoes !== 'N/A' ? `<p class="text-gray-600 text-sm mb-2">${item.observacoes}</p>` : ''}
             `;
             card.appendChild(contentDiv);
@@ -808,6 +809,7 @@
                             ${item.descricao && item.descricao !== 'N/A' ? `<p class="text-gray-600 text-sm line-clamp-1">${item.descricao}</p>` : ''}
                             ${item.classificacaoAdicional && item.classificacaoAdicional !== 'N/A' ? `<p class="text-gray-600 text-sm line-clamp-1">${item.classificacaoAdicional}</p>` : ''}
                             ${item.preco && item.preco !== 'N/A' ? `<p class="text-primary-dynamic font-bold">${EMPRESA_CONFIG.moeda} ${parseFloat(item.preco).toFixed(2).replace('.', ',')}</p>` : ''}
+                          <hr>
                             ${item.observacoes && item.observacoes !== 'N/A' ? `<p class="text-gray-600 text-sm line-clamp-1">${item.observacoes}</p>` : ''}
                         </div>
                         `;
