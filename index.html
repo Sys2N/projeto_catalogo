@@ -654,14 +654,6 @@
         function renderizarCategoriasMenu(categorias) {
             categoryScrollContainer.innerHTML = ''; // Limpa o conteúdo existente
 
-            // Adiciona a categoria "Todos"
-            const allCategoryItem = document.createElement('div');
-            allCategoryItem.className = 'category-item flex-shrink-0 px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-semibold whitespace-nowrap cursor-pointer hover-primary-dynamic';
-            allCategoryItem.textContent = 'Todos';
-            allCategoryItem.dataset.category = 'all';
-            allCategoryItem.onclick = () => scrollToCategory('all');
-            categoryScrollContainer.appendChild(allCategoryItem);
-
             categorias.forEach(categoria => {
                 const categoryItem = document.createElement('div');
                 categoryItem.className = 'category-item flex-shrink-0 px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-semibold whitespace-nowrap cursor-pointer hover-primary-dynamic';
