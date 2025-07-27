@@ -103,7 +103,7 @@
         
         .card-hover:hover {
             transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
         
         /* Estilos para o novo design de cards */
@@ -111,7 +111,7 @@
             display: flex;
             /*flex-direction: column;*/
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.09);
+            background-color: rgba(0, 0, 0, 0.2);
         }
         
         .menu-item-row {
@@ -675,7 +675,7 @@
                 if (categoria.ativa) {
                     const categoriaSecao = document.createElement('section');
                     categoriaSecao.id = categoria.id; // ID da seção é o Nome_Categoria
-                    categoriaSecao.className = 'categoria-secao mb-8 p-4 bg-white rounded-xl shadow-md fade-in'; // Adicionado fade-in
+                    categoriaSecao.className = 'categoria-secao mb-8 p-4 bg-gray-200 rounded-xl shadow-md fade-in'; // Adicionado fade-in
 
                     // Filtra itens disponíveis e os ordena se houver Classificação_Adicional (ou outro critério)
                     const itensDisponiveis = categoria.itens.filter(item => item.disponivel);
@@ -684,6 +684,7 @@
 
                     categoriaSecao.innerHTML = `
                         <h2 class="text-2xl font-bold mb-4">${categoria.nome}</h2>
+			<hr class="h-px bg-gray-600 mb-4">
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
                             ${itensDisponiveis.map(item => `
                             <div class="card-hover bg-white rounded-xl shadow-md overflow-hidden
