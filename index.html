@@ -1091,7 +1091,7 @@ function enviarPedidoWhatsApp() {
     const whatsappLink = document.querySelector('a[href*="mafra"]').href;
     const numeroLoja = whatsappLink.match(/wa.me\/(\d+)/)[1];
     
-    const url = `https://wa.me/${5547989159449}?text=${encodeURIComponent(mensagem)}`;
+    const url = `https://wa.me/${}?text=${encodeURIComponent(mensagem)}`;
     window.open(url, '_blank');
 }
 
@@ -1200,6 +1200,7 @@ sendWhatsappBtn.addEventListener('click', enviarPedidoWhatsApp);
 
 </body>
 </html>
+
 
 
 
