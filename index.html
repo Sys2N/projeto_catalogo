@@ -667,7 +667,7 @@
                     <div class="flex justify-between">
                         <div class="flex-1">
                             <h4 class="font-medium">${item.nome}</h4>
-                            <p class="text-sm text-gray-600">${item.descricao}</p>
+                            <p class="text-sm text-gray-600">${item.categoria}</p>
                         </div>
                         <div class="ml-4 text-right">
                             <p class="font-medium">R$ ${item.preco.toFixed(2).replace('.', ',')}</p>
@@ -742,7 +742,7 @@
             let message = `Olá, gostaria de fazer um pedido:\n\n`;
             
             cart.forEach(item => {
-                message += `✔ ${item.nome} (${item.descricao}) - ${item.quantity} x R$ ${item.preco.toFixed(2).replace('.', ',')} = R$ ${(item.preco * item.quantity).toFixed(2).replace('.', ',')}\n`;
+                message += `✔ ${item.nome} (${item.categoria}) (${item.descricao}) - ${item.quantity} x R$ ${item.preco.toFixed(2).replace('.', ',')} = R$ ${(item.preco * item.quantity).toFixed(2).replace('.', ',')}\n`;
             });
             
             message += `\n*Total: R$ ${total.toFixed(2).replace('.', ',')}*\n\n`;
@@ -1229,6 +1229,7 @@
 
 </body>
 </html>
+
 
 
 
