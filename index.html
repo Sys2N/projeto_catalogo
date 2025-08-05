@@ -742,7 +742,7 @@
             let message = `Olá, gostaria de fazer um pedido:\n\n`;
             
             cart.forEach(item => {
-                message += `✔ ${item.nome} (${item.categoria}) (${item.descricao}) - ${item.quantity} x R$ ${item.preco.toFixed(2).replace('.', ',')} = R$ ${(item.preco * item.quantity).toFixed(2).replace('.', ',')}\n`;
+                message += `✔ ${item.nome} (${item.categoria}) - ${item.quantity} x R$ ${item.preco.toFixed(2).replace('.', ',')} = R$ ${(item.preco * item.quantity).toFixed(2).replace('.', ',')}\n`;
             });
             
             message += `\n*Total: R$ ${total.toFixed(2).replace('.', ',')}*\n\n`;
@@ -1229,6 +1229,7 @@
 
 </body>
 </html>
+
 
 
 
