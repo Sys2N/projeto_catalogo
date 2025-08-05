@@ -9,8 +9,8 @@
         - 
         -
         - 480 a 490 - configurações da empresa   
+        -
         - 516 - inserir URL do apps´script_web publicado
-        - 739 - inserir num. whats que receberá pedido via carrinho
 -->
 
 <!DOCTYPE html>
@@ -437,7 +437,8 @@
         <!-- Menu de Categorias (parte do cabeçalho unificado) -->
         <div id="mobile-category-menu" class="bg-white/95 backdrop-blur-sm border-b border-gray-100 py-3 shadow-md">
             <div id="category-scroll" class="category-scroll flex overflow-x-auto px-4 space-x-3 min-h-[52px] items-center md:justify-center justify-start">
-        <!-- Placeholder para garantir que o menu tenha conteúdo mesmo antes do carregamento -->
+                <!-- Categorias serão inseridas dinamicamente aqui pelo JS -->
+                <!-- Placeholder para garantir que o menu tenha conteúdo mesmo antes do carregamento -->
                 <div class="flex-shrink-0 px-4 py-2 bg-gray-200 text-transparent rounded-full text-sm font-semibold whitespace-nowrap min-w-[80px] animate-pulse">Carregando...</div>
                 <div class="flex-shrink-0 px-4 py-2 bg-gray-200 text-transparent rounded-full text-sm font-semibold whitespace-nowrap min-w-[80px] animate-pulse">Carregando...</div>
                 <div class="flex-shrink-0 px-4 py-2 bg-gray-200 text-transparent rounded-full text-sm font-semibold whitespace-nowrap min-w-[80px] animate-pulse">Carregando...</div>
@@ -708,7 +709,6 @@
                     nome: product.nome,
                     preco: product.preco,
                     categoria: categoria.nome,
-		    descricao: descricao.nome,
                     quantity: 1
                 });
             }
@@ -737,7 +737,7 @@
             if (cart.length === 0) return;
             
             const total = cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0);
-            const whatsappNumber = "5547989159449"; // Número padrão (pode mudar conforme a loja)
+            const whatsappNumber = "554736453389"; // Número padrão (pode mudar conforme a loja)
             
             let message = `Olá, gostaria de fazer um pedido:\n\n`;
             
@@ -1229,6 +1229,8 @@
 
 </body>
 </html>
+
+
 
 
 
