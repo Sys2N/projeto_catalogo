@@ -9,8 +9,8 @@
         - 
         -
         - 480 a 490 - configurações da empresa   
-        -
         - 516 - inserir URL do apps´script_web publicado
+        - 739 - inserir num. whats que receberá pedido via carrinho
 -->
 
 <!DOCTYPE html>
@@ -736,7 +736,7 @@
             if (cart.length === 0) return;
             
             const total = cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0);
-            const whatsappNumber = "554736453389"; // Número padrão (pode mudar conforme a loja)
+            const whatsappNumber = "5547989159449"; // Número padrão (pode mudar conforme a loja)
             
             let message = `Olá, gostaria de fazer um pedido:\n\n`;
             
@@ -1228,6 +1228,7 @@
 
 </body>
 </html>
+
 
 
 
