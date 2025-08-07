@@ -294,6 +294,26 @@
             justify-content: center;
             font-size: 12px;
         }
+
+        /* ========== [ESTILOS DOS MODAIS] ========== */
+            [id$="-modal"], [id$="-form"] {
+                 animation: fadeIn 0.3s ease-out;
+            }
+            input, select {
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                padding: 8px 12px;
+                margin-bottom: 8px;
+                width: 100%;
+	
+            }
+            button:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+            }
+
+/* ========== [FIM DOS ESTILOS] ========== */
+
     </style>
 </head>
 <body class="gradient-bg min-h-screen" onload="window.scrollTo(0, 0);">
@@ -733,39 +753,261 @@
             }
         }
 
-        function sendToWhatsApp() {
-            if (cart.length === 0) return;
-            
-            const total = cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0);
-            const whatsappNumber = "554736453389"; // Número padrão (pode mudar conforme a loja)
-            
-            let message = `Olá, gostaria de fazer um pedido:\n\n`;
-            
-            cart.forEach(item => {
-                message += `✔ ${item.nome} (${item.categoria}) - ${item.quantity} x R$ ${item.preco.toFixed(2).replace('.', ',')} = R$ ${(item.preco * item.quantity).toFixed(2).replace('.', ',')}\n`;
-            });
-            
-            message += `\n*Total: R$ ${total.toFixed(2).replace('.', ',')}*\n\n`;
-            message += `Por favor, confirme a disponibilidade e formas de pagamento.`;
-            
-            // Codifica a mensagem para URL
-            const encodedMessage = encodeURIComponent(message);
-            
-            // Abre o WhatsApp
-            window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
-            
-            // Limpa o carrinho após enviar
-            cart = [];
-            updateCart();
-            closeCart();
-        }
+                    // ========== [INÍCIO DA ETAPA 1] ========== //
+          function showCustomerModal() {
+                const modalHTML = `
+                    <div id="customer-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
+                        <div class="bg-white p-6 rounded-lg max-w-md w-full">
+                            <h3 class="text-xl font-bold mb-4">Como você deseja receber seu pedido?</h3>
+                            <button onclick="showPickupOptions()" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg mb-2">
+                                🏪 Retirar na Loja
+                            </button>
+                            <button onclick="showDeliveryForm()" class="w-full bg-green-500 text-white py-2 px-4 rounded-lg">
+                                🚚 Entregar no Endereço
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+            }
+
+
+
+            // ========== [FIM DA ETAPA 1] ========== //
+
+            // ========== [INÍCIO DA ETAPA 2] ========== //
+            function proceedToDeliveryOptions() {
+                const nameInput = document.getElementById('customer-name');
+                const phoneInput = document.getElementById('customer-phone');
+
+                if (!nameInput) {
+                    alert("Erro interno: campo de nome não encontrado!");
+                    return;
+                }
+
+                const name = nameInput.value.trim();
+                const phone = phoneInput ? phoneInput.value.replace(/\D/g, '') : '';
+
+                if (phone && phone.length !== 4) {
+                    alert("Digite apenas os 4 últimos dígitos do telefone.");
+                    return;
+                }
+
+                document.getElementById('customer-modal').remove();
+
+                const modalHTML = `
+                    <div id="delivery-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
+                        <div class="bg-white p-6 rounded-lg max-w-md w-full">
+                            <h3 class="text-xl font-bold mb-4">Opções de Entrega</h3>
+                            <button onclick="showPickupOptions('${name}', '${phone}')" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg mb-2">
+                                🏪 Retirar na Loja
+                            </button>
+                            <button onclick="showDeliveryForm('${name}', '${phone}')" class="w-full bg-green-500 text-white py-2 px-4 rounded-lg">
+                                🚚 Entregar no Endereço
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+            }
+
+
+            // ========== [FIM DA ETAPA 2] ========== //
+
+            // ========== [INÍCIO DA RETIRADA] ========== //
+            function showPickupOptions() {
+                document.getElementById('customer-modal')?.remove();
+
+                const modalHTML = `
+                    <div id="delivery-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
+                        <div class="bg-white p-6 rounded-lg max-w-md w-full">
+                            <h3 class="text-xl font-bold mb-4">Retirada na Loja</h3>
+
+                            <label class="font-semibold">Seu nome</label>
+                            <input type="text" id="pickup-name" placeholder="Seu nome" class="w-full p-2 border mb-2">
+
+                            <label class="font-semibold">Seus 4 últimos dígitos do WhatsApp</label>
+                            <input type="tel" id="pickup-phone" placeholder="Ex: 1234" maxlength="4" class="w-full p-2 border mb-4">
+
+                            <label class="font-semibold">Selecione a loja</label>
+                            <select id="pickup-store" class="w-full p-2 border mb-4">
+                                <option value="">Selecione a loja</option>
+                                <option value="Mafra">Mafra</option>
+                                <option value="Rio Negro">Rio Negro</option>
+                            </select>
+
+                            <label class="font-semibold">Data para retirada</label>
+                            <input type="date" id="pickup-date" class="w-full p-2 border mb-4">
+
+                            <button onclick="confirmPickup()" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg">
+                                ✅ Finalizar Pedido
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+            }
+
+
+
+            function confirmPickup() {
+                const store = document.getElementById('pickup-store').value;
+                const dateInput = document.getElementById('pickup-date').value;
+
+                const customerName = document.getElementById('pickup-name')?.value.trim();
+                const customerPhone = document.getElementById('pickup-phone')?.value.trim();
+
+                if (!store || !dateInput || !customerName || customerName.length < 2 || !customerPhone || customerPhone.length !== 4) {
+                    alert("Preencha todos os campos obrigatórios corretamente (nome e 4 últimos dígitos do telefone).");
+                    return;
+                }
+
+                const [yyyy, mm, dd] = dateInput.split("-");
+                const dateFormatted = `${dd}/${mm}/${yyyy}`;
+
+                const message = `📋 *PEDIDO - RETIRADA NA LOJA*  
+            👤 *Cliente:* ${customerName}  
+            📞 *Últimos dígitos:* ${customerPhone}  
+            🏪 *Loja:* ${store}  
+            📅 *Data:* ${dateFormatted}  
+
+            ${generateOrderSummary()}`;
+
+                sendWhatsApp(message);
+            }
+
+
+
+
+            // ========== [FIM DA RETIRADA] ========== //
+
+            // ========== [INÍCIO DA ENTREGA] ========== //
+            // Formulário de entrega
+            function showDeliveryForm() {
+                document.getElementById('customer-modal')?.remove();
+
+                const modalHTML = `
+                    <div id="delivery-form" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
+                        <div class="bg-white p-6 rounded-lg max-w-md w-full overflow-y-auto max-h-[90vh]">
+                            <h3 class="text-xl font-bold mb-4">Entrega no Endereço</h3>
+
+                            <label class="font-semibold">Seu nome</label>
+                            <input type="text" id="client-name" placeholder="Nome de quem está fazendo o pedido" class="w-full p-2 border mb-2">
+
+                            <label class="font-semibold">Seus 4 últimos números do WhatsApp</label>
+                            <input type="tel" id="client-phone" placeholder="Ex: 1234" maxlength="4" class="w-full p-2 border mb-4">
+
+                            <label class="font-semibold">Nome de quem vai receber</label>
+                            <input type="text" id="recipient-name" placeholder="Nome do destinatário" class="w-full p-2 border mb-2">
+
+                            <label class="font-semibold">Telefone do destinatário</label>
+                            <input type="tel" id="recipient-phone" placeholder="Com DDD" class="w-full p-2 border mb-4">
+
+                            <label class="font-semibold">Rua</label>
+                            <input type="text" id="delivery-street" placeholder="Rua do destinatário" class="w-full p-2 border mb-2">
+
+                            <label class="font-semibold">Número e complemento</label>
+                            <input type="text" id="delivery-number" placeholder="Ex: 123 ou Bloco 5 Ap 505" class="w-full p-2 border mb-2">
+
+                            <label class="font-semibold">Bairro</label>
+                            <input type="text" id="delivery-district" placeholder="Bairro" class="w-full p-2 border mb-2">
+
+                            <label class="font-semibold">Cidade</label>
+                            <input type="text" id="delivery-city" placeholder="Cidade" class="w-full p-2 border mb-2">
+
+                            <label class="font-semibold">Ponto de referência (opcional)</label>
+                            <input type="text" id="delivery-reference" placeholder="Ex: Próximo ao mercado, portão branco..." class="w-full p-2 border mb-4">
+
+                            <label class="font-semibold">Data para entrega</label>
+                            <input type="date" id="delivery-date" class="w-full p-2 border mb-4">
+
+                            <button onclick="confirmDelivery()" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg">
+                                ✅ Finalizar Pedido
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+            }
+
+
+
+                function confirmDelivery() {
+                    const clientName = document.getElementById('client-name').value.trim() || 'Não informado';
+                    const clientPhone = document.getElementById('client-phone').value.trim() || 'Não informado';
+
+                    const recipientName = document.getElementById('recipient-name').value.trim();
+                    const recipientPhone = document.getElementById('recipient-phone').value.trim();
+
+                    const street = document.getElementById('delivery-street').value.trim();
+                    const number = document.getElementById('delivery-number').value.trim();
+                    const district = document.getElementById('delivery-district').value.trim();
+                    const city = document.getElementById('delivery-city').value.trim();
+                    const reference = document.getElementById('delivery-reference').value.trim();
+                    const dateInput = document.getElementById('delivery-date').value;
+
+                    // Validação dos obrigatórios
+                    if (!recipientName || !recipientPhone || !street || !number || !district || !city || !dateInput) {
+                        alert("Preencha todos os campos obrigatórios!");
+                        return;
+                    }
+
+                    const [yyyy, mm, dd] = dateInput.split("-");
+                    const dateFormatted = `${dd}/${mm}/${yyyy}`;
+
+                    const address = `${street}, ${number} - ${district}, ${city}`;
+                    const referenceLine = reference ? `📌 *Ponto de referência:* ${reference}\n` : '';
+
+                    const message = `📋 *PEDIDO - ENTREGA NO ENDEREÇO*  
+                👤 *Cliente:* ${clientName}  
+                📞 *Últimos dígitos:* ${clientPhone}  
+
+                🎁 *Destinatário:* ${recipientName}  
+                📱 *Telefone do destinatário:* ${recipientPhone}  
+                📍 *Endereço:* ${address}  
+                ${referenceLine}📅 *Data:* ${dateFormatted}  
+                ⏱ *Horário e Valor da Entrega:* A confirmar  
+
+                ${generateOrderSummary()}*(Confirmar valor da entrega)*`;
+
+                    sendWhatsApp(message);
+                }
+
+            // ========== [FIM DA ENTREGA] ========== //
+
+            // ========== [FUNÇÕES REUTILIZÁVEIS] ========== //
+            function generateOrderSummary() {
+                return `🛒 *ITENS*  
+            ${cart.map(item => {
+                const unit = item.preco.toFixed(2).replace('.', ',');
+                const subtotal = (item.preco * item.quantity).toFixed(2).replace('.', ',');
+                return `• ${item.quantity}x ${item.nome} (R$ ${unit}) = R$ ${subtotal}`;
+                }).join('\n')}
+
+            💲 *TOTAL: R$ ${cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0).toFixed(2).replace('.', ',')}*`;
+            }
+
+
+            function sendWhatsApp(message) {
+                const numeroWhatsApp = "554736453389"; // Número padrão (altere se necessário)
+                window.open(`https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(message)}`, '_blank');
+                
+                // Limpeza pós-envio
+                cart.length = 0
+                updateCart();
+                               
+
+                document.querySelectorAll('[id$="-modal"], [id$="-form"]').forEach(el => el.remove());
+            }
+
+            // ========== [FIM DAS FUNÇÕES] ========== //
 
         // Event Listeners do Carrinho
         cartButton.addEventListener('click', openCart);
         closeCartButton.addEventListener('click', closeCart);
         cartOverlay.addEventListener('click', closeCart);
         continueShoppingButton.addEventListener('click', closeCart);
-        checkoutButton.addEventListener('click', sendToWhatsApp);
+        checkoutButton.addEventListener('click', showCustomerModal);
 
         // Adiciona ao escopo global para ser acessível nos botões dos produtos
         window.addToCart = addToCart;
@@ -1176,20 +1418,34 @@
             carregarDadosCatalogo(); // Carrega apenas categorias e itens
         });
     
-  function abrirImagem(src) {
-    const modal = document.getElementById("modalImagem");
-    const imagem = document.getElementById("imagemExpandida");
-    imagem.src = src;
-    modal.style.display = "flex";
-    document.body.style.overflow = 'hidden';
-  }
+            function abrirImagem(src) {
+                const modal = document.getElementById("modalImagem");
+                const imagem = document.getElementById("imagemExpandida");
+                imagem.src = src;
+                modal.style.display = "flex";
+                document.body.style.overflow = 'hidden';
+            }
 
-  function fecharImagem() {
-    document.getElementById("modalImagem").style.display = "none";
-    document.body.style.overflow = '';
-  }
+            function fecharImagem() {
+                document.getElementById("modalImagem").style.display = "none";
+                document.body.style.overflow = '';
+            }
 
-</script>
+            // ===== EVENTO DO BOTÃO FINALIZAR ===== //
+            document.getElementById('checkout-btn').addEventListener('click', function(e) {
+                e.preventDefault(); // Isso previne o comportamento padrão
+                if (cart.length === 0) {
+                    alert("🛒 Seu carrinho está vazio!");
+                    return;
+                }
+                showCustomerModal(); // Isso inicia o fluxo completo
+            });
+            // ===== FIM ===== //
+            
+
+
+
+        </script>
 
       <meta charset="UTF-8" />
   <title>Ícone WhatsApp Verde Fixado</title>
@@ -1208,15 +1464,6 @@
 </head>
 <body>
 
-   <a href="https://wa.me/554736453389?text=Olá, visualizei o catálogo e gostaria de..."" target="_blank" rel="noopener noreferrer" aria-label="Abrir WhatsApp"
-   class="fixed bottom-6 left-6 md:left-24 bg-green-500 text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 z-50">
-    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M20.52 3.48A11.77 11.77 0 0012 0C5.37 0 0 5.37 0 12a11.88 11.88 0 001.64 6L0 24l6-1.61a11.88 11.88 0 005.95 1.55c6.63 0 12-5.37 12-12a11.77 11.77 0 00-3.48-8.41zm-8.48 17.4a9.5 9.5 0 01-4.83-1.41l-.35-.21-3.57.95.95-3.48-.23-.35a9.5 9.5 0 1110.03 4z"/>
-        <path d="M16.32 14.69l-2.1-.95a.71.71 0 00-.7.18l-1.05 1.04a7.44 7.44 0 01-3.58-3.58l1.04-1.05a.7.7 0 00.17-.7l-.95-2.11a.7.7 0 00-.67-.4H7.06a.7.7 0 00-.7.7 9.3 9.3 0 009.3 9.3.7.7 0 00.7-.7v-1.7a.7.7 0 00-.04-.28z"/>
-    </svg>
-</a>
-
-
 <!-- Modal de Imagem Ampliada -->
 <div id="modalImagem" class="fixed inset-0 bg-black bg-opacity-80 hidden justify-center items-center z-[9999]" onclick="fecharImagem()">
   <img id="imagemExpandida" class="max-w-full max-h-full rounded-lg shadow-lg">
@@ -1224,9 +1471,6 @@
 
 </body>
 </html>
-
-
-
 
 
 
