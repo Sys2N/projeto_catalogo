@@ -590,7 +590,7 @@
             <button id="continue-shopping-btn" class="w-full bg-gray-200 text-gray-700 py-3 px-4 rounded-lg mt-2 hover:bg-gray-300 transition">
                 Continuar Comprando
             </button>
-            <button id="checkout-btn" class="w-full bg-primary-dynamic text-white py-3 px-4 rounded-lg mt-4 hover:bg-opacity-90 transition">
+            <button id="checkout-btn" class= "hidden w-full bg-primary-dynamic text-white py-3 px-4 rounded-lg mt-4 hover:bg-opacity-90 transition">
                 Finalizar Pedido via WhatsApp
             </button>
         </div>
@@ -676,6 +676,18 @@
             document.body.style.overflow = '';
         }
 
+        // ===== MOSTRA/ESCONDE BOTÃO SE TOTAL > 0 ===== //
+            function toggleCheckoutButton() {
+                const total = cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0);
+                const checkoutBtn = document.getElementById('checkout-btn');
+                
+                if (total > 0) {
+                    checkoutBtn.classList.remove('hidden');
+                } else {
+                    checkoutBtn.classList.add('hidden');
+                }
+            }
+
         function updateCart() {
             // Limpa os itens atuais
             cartItemsContainer.innerHTML = '';
@@ -716,6 +728,7 @@
             } else {
                 cartBadge.classList.add('hidden');
             }
+            toggleCheckoutButton();
         }
 
         function addToCart(product, categoria) {
@@ -754,22 +767,35 @@
         }
 
                     // ========== [INÍCIO DA ETAPA 1] ========== //
-          function showCustomerModal() {
-                const modalHTML = `
-                    <div id="customer-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
-                        <div class="bg-white p-6 rounded-lg max-w-md w-full">
-                            <h3 class="text-xl font-bold mb-4">Como você deseja receber seu pedido?</h3>
-                            <button onclick="showPickupOptions()" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg mb-2">
-                                🏪 Retirar na Loja
-                            </button>
-                            <button onclick="showDeliveryForm()" class="w-full bg-green-500 text-white py-2 px-4 rounded-lg">
-                                🚚 Entregar no Endereço
-                            </button>
-                        </div>
-                    </div>
-                `;
-                document.body.insertAdjacentHTML('beforeend', modalHTML);
-            }
+                    function showCustomerModal() {
+                        // Remove o modal existente ANTES de criar um novo
+                        const existingModal = document.getElementById('customer-modal');
+                        if (existingModal) existingModal.remove();
+                        
+                        const modalHTML = `
+                            <div id="customer-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
+                                <div class="bg-white p-6 rounded-lg max-w-md w-full">
+                                    <h3 class="text-xl font-bold mb-4">Como você deseja receber seu pedido?</h3>
+                                    <button onclick="showPickupOptions()" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg mb-2">
+                                        🏪 Retirar na Loja
+                                    </button>
+                                    <button onclick="showDeliveryForm()" class="w-full bg-green-500 text-white py-2 px-4 rounded-lg">
+                                        🚚 Entregar no Endereço
+                                    </button>
+                                    <button onclick="closeCustomerModal()" class="w-full bg-gray-300 text-black py-2 px-4 rounded-lg mt-2">
+                                        🔙 Voltar
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        document.body.insertAdjacentHTML('beforeend', modalHTML);
+                    }
+
+                    // Função auxiliar para fechar o modal
+                    function closeCustomerModal() {
+                        document.getElementById('customer-modal')?.remove();
+                        renderCart(); // Ou outra função para atualizar a tela
+                    }
 
 
 
@@ -815,38 +841,45 @@
             // ========== [FIM DA ETAPA 2] ========== //
 
             // ========== [INÍCIO DA RETIRADA] ========== //
-            function showPickupOptions() {
-                document.getElementById('customer-modal')?.remove();
+                function showPickupOptions() {
+                    document.getElementById('customer-modal')?.remove();
 
-                const modalHTML = `
-                    <div id="delivery-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
-                        <div class="bg-white p-6 rounded-lg max-w-md w-full">
-                            <h3 class="text-xl font-bold mb-4">Retirada na Loja</h3>
+                    const modalHTML = `
+                        <div id="delivery-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
+                            <div class="bg-white p-6 rounded-lg max-w-md w-full">
+                                <h3 class="text-xl font-bold mb-4">Retirada na Loja</h3>
 
-                            <label class="font-semibold">Seu nome</label>
-                            <input type="text" id="pickup-name" placeholder="Seu nome" class="w-full p-2 border mb-2">
+                                <label class="font-semibold">Seu nome</label>
+                                <input type="text" id="pickup-name" placeholder="Seu nome" class="w-full p-2 border mb-2">
 
-                            <label class="font-semibold">Seus 4 últimos dígitos do WhatsApp</label>
-                            <input type="tel" id="pickup-phone" placeholder="Ex: 1234" maxlength="4" class="w-full p-2 border mb-4">
+                                <label class="font-semibold">Seus 4 últimos dígitos do WhatsApp</label>
+                                <input type="tel" id="pickup-phone" placeholder="Ex: 1234" maxlength="4" class="w-full p-2 border mb-4">
 
-                            <label class="font-semibold">Selecione a loja</label>
-                            <select id="pickup-store" class="w-full p-2 border mb-4">
-                                <option value="">Selecione a loja</option>
-                                <option value="Mafra">Mafra</option>
-                                <option value="Rio Negro">Rio Negro</option>
-                            </select>
+                                <label class="font-semibold">Selecione a loja</label>
+                                <select id="pickup-store" class="w-full p-2 border mb-4">
+                                    <option value="">Selecione a loja</option>
+                                    <option value="Mafra">Mafra</option>
+                                    <option value="Rio Negro">Rio Negro</option>
+                                </select>
 
-                            <label class="font-semibold">Data para retirada</label>
-                            <input type="date" id="pickup-date" class="w-full p-2 border mb-4">
+                                <label class="font-semibold">Data para retirada</label>
+                                <input type="date" id="pickup-date" class="w-full p-2 border mb-4">
 
-                            <button onclick="confirmPickup()" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg">
-                                ✅ Finalizar Pedido
-                            </button>
+                                <button onclick="confirmPickup()" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg">
+                                    ✅ Finalizar Pedido
+                                </button>
+
+                                <button onclick="(() => { document.getElementById('delivery-modal')?.remove(); showCustomerModal(); })()" class="w-full bg-gray-300 text-black py-2 px-4 rounded-lg mb-2 mt-2">
+                                    🔙 Voltar
+                                </button>
+
+
+                            </div>
                         </div>
-                    </div>
-                `;
-                document.body.insertAdjacentHTML('beforeend', modalHTML);
-            }
+                    `;
+                    document.body.insertAdjacentHTML('beforeend', modalHTML);
+                }
+
 
 
 
@@ -865,16 +898,16 @@
                 const [yyyy, mm, dd] = dateInput.split("-");
                 const dateFormatted = `${dd}/${mm}/${yyyy}`;
 
-                const message = `📋 *PEDIDO - RETIRADA NA LOJA*  
-            👤 *Cliente:* ${customerName}  
-            📞 *Últimos dígitos:* ${customerPhone}  
-            🏪 *Loja:* ${store}  
-            📅 *Data:* ${dateFormatted}  
+const message = `📋 *PEDIDO - RETIRADA NA LOJA*  
 
-            ${generateOrderSummary()}`;
+👤 *Cliente:* ${customerName} ( ${customerPhone} )
+🏪 *Loja:* ${store}  
+📅 *Data:* ${dateFormatted}  
 
-                sendWhatsApp(message);
-            }
+${generateOrderSummary()}`;
+
+sendWhatsApp(message);
+}
 
 
 
@@ -883,52 +916,59 @@
 
             // ========== [INÍCIO DA ENTREGA] ========== //
             // Formulário de entrega
-            function showDeliveryForm() {
-                document.getElementById('customer-modal')?.remove();
+                function showDeliveryForm() {
+                    document.getElementById('customer-modal')?.remove();
 
-                const modalHTML = `
-                    <div id="delivery-form" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
-                        <div class="bg-white p-6 rounded-lg max-w-md w-full overflow-y-auto max-h-[90vh]">
-                            <h3 class="text-xl font-bold mb-4">Entrega no Endereço</h3>
+                    const modalHTML = `
+                        <div id="delivery-form" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
+                            <div class="bg-white p-6 rounded-lg max-w-md w-full overflow-y-auto max-h-[90vh]">
+                                <h3 class="text-xl font-bold mb-4">Entrega no Endereço</h3>
 
-                            <label class="font-semibold">Seu nome</label>
-                            <input type="text" id="client-name" placeholder="Nome de quem está fazendo o pedido" class="w-full p-2 border mb-2">
+                                <label class="font-semibold">Seu nome</label>
+                                <input type="text" id="client-name" placeholder="Seu nome" class="w-full p-2 border mb-2">
 
-                            <label class="font-semibold">Seus 4 últimos números do WhatsApp</label>
-                            <input type="tel" id="client-phone" placeholder="Ex: 1234" maxlength="4" class="w-full p-2 border mb-4">
+                                <label class="font-semibold">Seus 4 últimos dígitos do WhatsApp</label>
+                                <input type="tel" id="client-phone" placeholder="Ex: 1234" maxlength="4" class="w-full p-2 border mb-4">
 
-                            <label class="font-semibold">Nome de quem vai receber</label>
-                            <input type="text" id="recipient-name" placeholder="Nome do destinatário" class="w-full p-2 border mb-2">
+                                <label class="font-semibold">Nome do destinatário</label>
+                                <input type="text" id="recipient-name" placeholder="Nome de quem vai receber" class="w-full p-2 border mb-2">
 
-                            <label class="font-semibold">Telefone do destinatário</label>
-                            <input type="tel" id="recipient-phone" placeholder="Com DDD" class="w-full p-2 border mb-4">
+                                <label class="font-semibold">Telefone do destinatário</label>
+                                <input type="tel" id="recipient-phone" placeholder="WhatsApp de quem vai receber)" class="w-full p-2 border mb-4">
 
-                            <label class="font-semibold">Rua</label>
-                            <input type="text" id="delivery-street" placeholder="Rua do destinatário" class="w-full p-2 border mb-2">
+                                <label class="font-semibold">Cidade</label>
+                                <input type="text" id="delivery-city" placeholder="Cidade" class="w-full p-2 border mb-2">
 
-                            <label class="font-semibold">Número e complemento</label>
-                            <input type="text" id="delivery-number" placeholder="Ex: 123 ou Bloco 5 Ap 505" class="w-full p-2 border mb-2">
+                                <label class="font-semibold">Bairro</label>
+                                <input type="text" id="delivery-district" placeholder="Bairro" class="w-full p-2 border mb-2">
 
-                            <label class="font-semibold">Bairro</label>
-                            <input type="text" id="delivery-district" placeholder="Bairro" class="w-full p-2 border mb-2">
+                                <label class="font-semibold">Rua</label>
+                                <input type="text" id="delivery-street" placeholder="Nome da rua" class="w-full p-2 border mb-2">
 
-                            <label class="font-semibold">Cidade</label>
-                            <input type="text" id="delivery-city" placeholder="Cidade" class="w-full p-2 border mb-2">
+                                <label class="font-semibold">Número / Complemento</label>
+                                <input type="text" id="delivery-number" placeholder="Número da casa, apto, bloco etc." class="w-full p-2 border mb-2">
 
-                            <label class="font-semibold">Ponto de referência (opcional)</label>
-                            <input type="text" id="delivery-reference" placeholder="Ex: Próximo ao mercado, portão branco..." class="w-full p-2 border mb-4">
+                                <label class="font-semibold">Ponto de referência (opcional)</label>
+                                <input type="text" id="delivery-reference" placeholder="Ex: perto da praça" class="w-full p-2 border mb-4">
 
-                            <label class="font-semibold">Data para entrega</label>
-                            <input type="date" id="delivery-date" class="w-full p-2 border mb-4">
+                                <label class="font-semibold">Data para entrega</label>
+                                <input type="date" id="delivery-date" class="w-full p-2 border mb-4">
 
-                            <button onclick="confirmDelivery()" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg">
-                                ✅ Finalizar Pedido
-                            </button>
+                                <button onclick="confirmDelivery()" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg">
+                                    ✅ Finalizar Pedido
+                                </button>
+
+                                <button onclick="(() => { document.getElementById('delivery-form')?.remove(); showCustomerModal(); })()" class="w-full bg-gray-300 text-black py-2 px-4 rounded-lg mb-2 mt-2">
+                                    🔙 Voltar
+                                </button>
+
+
+                            </div>
                         </div>
-                    </div>
-                `;
-                document.body.insertAdjacentHTML('beforeend', modalHTML);
-            }
+                    `;
+                    document.body.insertAdjacentHTML('beforeend', modalHTML);
+                }
+
 
 
 
@@ -958,34 +998,34 @@
                     const address = `${street}, ${number} - ${district}, ${city}`;
                     const referenceLine = reference ? `📌 *Ponto de referência:* ${reference}\n` : '';
 
-                    const message = `📋 *PEDIDO - ENTREGA NO ENDEREÇO*  
-                👤 *Cliente:* ${clientName}  
-                📞 *Últimos dígitos:* ${clientPhone}  
+const message = `📋 *PEDIDO - ENTREGA NO ENDEREÇO*  
+👤 *Cliente:* ${clientName} ( ${clientPhone} )
+               
+🎁 *Destinatário:* ${recipientName}  
+📱 *Telefone do destinatário:* ${recipientPhone}  
+📍 *Endereço:* ${address}  
+${referenceLine}📅 *Data:* ${dateFormatted}  
 
-                🎁 *Destinatário:* ${recipientName}  
-                📱 *Telefone do destinatário:* ${recipientPhone}  
-                📍 *Endereço:* ${address}  
-                ${referenceLine}📅 *Data:* ${dateFormatted}  
-                ⏱ *Horário e Valor da Entrega:* A confirmar  
+⏱ *Horário e Taxa da Entrega:* A confirmar  
 
-                ${generateOrderSummary()}*(Confirmar valor da entrega)*`;
+${generateOrderSummary()}*(Confirmar valor da entrega)*`;
 
-                    sendWhatsApp(message);
-                }
+sendWhatsApp(message);
+}
 
             // ========== [FIM DA ENTREGA] ========== //
 
             // ========== [FUNÇÕES REUTILIZÁVEIS] ========== //
-            function generateOrderSummary() {
-                return `🛒 *ITENS*  
-            ${cart.map(item => {
-                const unit = item.preco.toFixed(2).replace('.', ',');
-                const subtotal = (item.preco * item.quantity).toFixed(2).replace('.', ',');
-                return `• ${item.quantity}x ${item.nome} (R$ ${unit}) = R$ ${subtotal}`;
-                }).join('\n')}
+function generateOrderSummary() {
+return `🛒 *ITENS*  
+${cart.map(item => {
+const unit = item.preco.toFixed(2).replace('.', ',');
+const subtotal = (item.preco * item.quantity).toFixed(2).replace('.', ',');
+return `• ${item.quantity}x ${item.nome} (R$ ${unit}) = R$ ${subtotal}`;
+}).join('\n')}
 
-            💲 *TOTAL: R$ ${cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0).toFixed(2).replace('.', ',')}*`;
-            }
+💲 *TOTAL: R$ ${cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0).toFixed(2).replace('.', ',')}*`;
+}
 
 
             function sendWhatsApp(message) {
@@ -1447,19 +1487,7 @@
 
         </script>
 
-      <meta charset="UTF-8" />
-  <title>Ícone WhatsApp Verde Fixado</title>
-  <style>
-    .whatsapp-icon {
-      width: 60px;
-      height: 60px;
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      cursor: pointer;
-      z-index: 1000;
-      fill: #25D366; /* Verde WhatsApp */
-    }
+      
   </style>
 </head>
 <body>
@@ -1471,7 +1499,6 @@
 
 </body>
 </html>
-
 
 
 
