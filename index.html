@@ -886,7 +886,6 @@
             function confirmPickup() {
                 const store = document.getElementById('pickup-store').value;
                 const dateInput = document.getElementById('pickup-date').value;
-
                 const customerName = document.getElementById('pickup-name')?.value.trim();
                 const customerPhone = document.getElementById('pickup-phone')?.value.trim();
 
@@ -898,7 +897,7 @@
                 const [yyyy, mm, dd] = dateInput.split("-");
                 const dateFormatted = `${dd}/${mm}/${yyyy}`;
 
-const message = `📋 *PEDIDO - RETIRADA NA LOJA*  
+                const message = `📋 *PEDIDO - RETIRADA NA LOJA*  
 
 👤 *Cliente:* ${customerName} ( ${customerPhone} )
 🏪 *Loja:* ${store}  
@@ -906,8 +905,12 @@ const message = `📋 *PEDIDO - RETIRADA NA LOJA*
 
 ${generateOrderSummary()}`;
 
-sendWhatsApp(message);
-}
+                // Envia para WhatsApp e planilha
+                window.clientName = customerName;
+                window.clientPhone = customerPhone;
+                sendWhatsApp(message, "Retirada", "", store);
+            }
+
 
 
 
@@ -978,7 +981,6 @@ sendWhatsApp(message);
 
                     const recipientName = document.getElementById('recipient-name').value.trim();
                     const recipientPhone = document.getElementById('recipient-phone').value.trim();
-
                     const street = document.getElementById('delivery-street').value.trim();
                     const number = document.getElementById('delivery-number').value.trim();
                     const district = document.getElementById('delivery-district').value.trim();
@@ -986,7 +988,6 @@ sendWhatsApp(message);
                     const reference = document.getElementById('delivery-reference').value.trim();
                     const dateInput = document.getElementById('delivery-date').value;
 
-                    // Validação dos obrigatórios
                     if (!recipientName || !recipientPhone || !street || !number || !district || !city || !dateInput) {
                         alert("Preencha todos os campos obrigatórios!");
                         return;
@@ -994,7 +995,6 @@ sendWhatsApp(message);
 
                     const [yyyy, mm, dd] = dateInput.split("-");
                     const dateFormatted = `${dd}/${mm}/${yyyy}`;
-
                     const address = `${street}, ${number} - ${district}, ${city}`;
                     const referenceLine = reference ? `📌 *Ponto de referência:* ${reference}\n` : '';
 
@@ -1010,8 +1010,12 @@ ${referenceLine}📅 *Data:* ${dateFormatted}
 
 ${generateOrderSummary()}*(Confirmar valor da entrega)*`;
 
-sendWhatsApp(message);
-}
+                    // Envia para WhatsApp e planilha
+                    window.clientName = clientName;
+                    window.clientPhone = clientPhone;
+                    sendWhatsApp(message, "Entrega", address, "");
+                }
+
 
             // ========== [FIM DA ENTREGA] ========== //
 
@@ -1027,18 +1031,53 @@ return `• ${item.quantity}x ${item.nome} (R$ ${unit}) = R$ ${subtotal}`;
 💲 *TOTAL: R$ ${cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0).toFixed(2).replace('.', ',')}*`;
 }
 
-
-            function sendWhatsApp(message) {
-                const numeroWhatsApp = "554736453389"; // Número padrão (altere se necessário)
+            function sendWhatsApp(message, retiradaEntrega = "", endereco = "", loja = "") {
+                const numeroWhatsApp = "5547989159449"; // Número padrão
                 window.open(`https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(message)}`, '_blank');
-                
-                // Limpeza pós-envio
-                cart.length = 0
-                updateCart();
-                               
 
+                // === Gera ID único do pedido ===
+                var idPedido = "PD-" + new Date().toISOString().replace(/[-:T.Z]/g, "").slice(0,12);
+
+                // === Monta dados para a planilha ===
+                var pedidoData = {
+                    id_pedido: idPedido,
+                    data1: new Date().toLocaleDateString("pt-BR"),
+                    nome: typeof clientName !== "undefined" ? clientName : "",
+                    telefone: typeof clientPhone !== "undefined" ? clientPhone : "",
+                    retirada_entrega: retiradaEntrega,
+                    endereco: endereco,
+                    loja: loja,
+                    status: "novo",
+                    itens: []
+                };
+
+                // Percorre o carrinho e adiciona cada item
+                cart.forEach(function(item) {
+                    pedidoData.itens.push({
+                        id_produto: item.id,
+                        quantidade: item.quantity,
+                        valor: item.preco
+                    });
+                });
+
+                // === Envia para o Google Sheets ===
+                fetch("https://script.google.com/macros/s/AKfycbziFqqlbZJulO0H49DmbcVW8npmVVcqbUalzeMSrUXsZxMQKVkDR9p-zXXuTu0HKK0o/exec", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(pedidoData)
+                })
+                .then(res => res.json())
+                .then(res => console.log("Resposta planilha:", res))
+                .catch(err => console.error("Erro ao enviar para planilha:", err));
+
+                // === Limpeza pós-envio ===
+                cart.length = 0;
+                updateCart();
                 document.querySelectorAll('[id$="-modal"], [id$="-form"]').forEach(el => el.remove());
             }
+
 
             // ========== [FIM DAS FUNÇÕES] ========== //
 
@@ -1499,7 +1538,6 @@ return `• ${item.quantity}x ${item.nome} (R$ ${unit}) = R$ ${subtotal}`;
 
 </body>
 </html>
-
 
 
 
