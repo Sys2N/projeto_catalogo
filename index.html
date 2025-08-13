@@ -607,6 +607,8 @@
     <script>
         // Variáveis globais
         let dadosCatalogo = {};
+        // Variável global para armazenar o ID do pedido
+        let pedidoIdAtual = "";
         // As configurações da empresa agora são estáticas no HTML/CSS
         const EMPRESA_CONFIG = {
             nomeEmpresa: "Floricultura Nina", // Personalize
@@ -886,6 +888,7 @@
             function confirmPickup() {
                 const store = document.getElementById('pickup-store').value;
                 const dateInput = document.getElementById('pickup-date').value;
+
                 const customerName = document.getElementById('pickup-name')?.value.trim();
                 const customerPhone = document.getElementById('pickup-phone')?.value.trim();
 
@@ -897,25 +900,31 @@
                 const [yyyy, mm, dd] = dateInput.split("-");
                 const dateFormatted = `${dd}/${mm}/${yyyy}`;
 
-                const message = `📋 *PEDIDO - RETIRADA NA LOJA*  
+const message = `RETIRADA NA LOJA
+${pedidoIdAtual} 
 
-👤 *Cliente:* ${customerName} ( ${customerPhone} )
-🏪 *Loja:* ${store}  
-📅 *Data:* ${dateFormatted}  
+Cliente: ${customerName} ( ${customerPhone} )
+Loja: ${store}  
+Data: ${dateFormatted}  
 
 ${generateOrderSummary()}`;
 
-                // Envia para WhatsApp e planilha
-                window.clientName = customerName;
-                window.clientPhone = customerPhone;
-                sendWhatsApp(message, "Retirada", "", store);
-            }
+        const dadosPickup = {
+            id_pedido: pedidoIdAtual,
+            retirada_entrega: "retirada",
+            data: dateFormatted,
+            cliente: customerName,
+            loja: store,
+            quem_recebe: "",
+            fone: "",
+            endereco: "",
+            ponto_referencia: ""
+        };
 
-
-
-
-
-            // ========== [FIM DA RETIRADA] ========== //
+sendToGoogleSheets(dadosPickup);
+sendWhatsApp(message);
+}
+// ========== [FIM DA RETIRADA] ========== //
 
             // ========== [INÍCIO DA ENTREGA] ========== //
             // Formulário de entrega
@@ -981,6 +990,7 @@ ${generateOrderSummary()}`;
 
                     const recipientName = document.getElementById('recipient-name').value.trim();
                     const recipientPhone = document.getElementById('recipient-phone').value.trim();
+
                     const street = document.getElementById('delivery-street').value.trim();
                     const number = document.getElementById('delivery-number').value.trim();
                     const district = document.getElementById('delivery-district').value.trim();
@@ -988,6 +998,7 @@ ${generateOrderSummary()}`;
                     const reference = document.getElementById('delivery-reference').value.trim();
                     const dateInput = document.getElementById('delivery-date').value;
 
+                    // Validação dos obrigatórios
                     if (!recipientName || !recipientPhone || !street || !number || !district || !city || !dateInput) {
                         alert("Preencha todos os campos obrigatórios!");
                         return;
@@ -995,89 +1006,88 @@ ${generateOrderSummary()}`;
 
                     const [yyyy, mm, dd] = dateInput.split("-");
                     const dateFormatted = `${dd}/${mm}/${yyyy}`;
+
                     const address = `${street}, ${number} - ${district}, ${city}`;
                     const referenceLine = reference ? `📌 *Ponto de referência:* ${reference}\n` : '';
 
-const message = `📋 *PEDIDO - ENTREGA NO ENDEREÇO*  
-👤 *Cliente:* ${clientName} ( ${clientPhone} )
+const message = `ENTREGA NO ENDEREÇO
+${pedidoIdAtual}
+
+Cliente: ${clientName} ( ${clientPhone} )
                
-🎁 *Destinatário:* ${recipientName}  
-📱 *Telefone do destinatário:* ${recipientPhone}  
-📍 *Endereço:* ${address}  
-${referenceLine}📅 *Data:* ${dateFormatted}  
+Quem Recebe: ${recipientName}  
+Fone: ${recipientPhone}  
+Endereço: ${address}  
+${referenceLine} Data: ${dateFormatted}  
 
-⏱ *Horário e Taxa da Entrega:* A confirmar  
+Horário e Taxa da Entrega: A confirmar  
 
-${generateOrderSummary()}*(Confirmar valor da entrega)*`;
+${generateOrderSummary()}
+(Confirmar valor da entrega)`;
 
-                    // Envia para WhatsApp e planilha
-                    window.clientName = clientName;
-                    window.clientPhone = clientPhone;
-                    sendWhatsApp(message, "Entrega", address, "");
-                }
+        const dadosDelivery = {
+            id_pedido: pedidoIdAtual,
+            retirada_entrega: "entrega",
+            data: dateFormatted,
+            cliente: clientName,
+            loja: "",
+            quem_recebe: recipientName,
+            fone: recipientPhone,
+            endereco: address,
+            ponto_referencia: reference
+        };
 
+sendToGoogleSheets(dadosDelivery);
+sendWhatsApp(message);
+}
 
             // ========== [FIM DA ENTREGA] ========== //
 
             // ========== [FUNÇÕES REUTILIZÁVEIS] ========== //
 function generateOrderSummary() {
-return `🛒 *ITENS*  
+return `ITENS  
 ${cart.map(item => {
 const unit = item.preco.toFixed(2).replace('.', ',');
 const subtotal = (item.preco * item.quantity).toFixed(2).replace('.', ',');
 return `• ${item.quantity}x ${item.nome} (R$ ${unit}) = R$ ${subtotal}`;
 }).join('\n')}
 
-💲 *TOTAL: R$ ${cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0).toFixed(2).replace('.', ',')}*`;
+TOTAL: R$ ${cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0).toFixed(2).replace('.', ',')}`;
 }
 
-            function sendWhatsApp(message, retiradaEntrega = "", endereco = "", loja = "") {
-                const numeroWhatsApp = "5547989159449"; // Número padrão
-                window.open(`https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(message)}`, '_blank');
+    //função que envia dados para google sheets
 
-                // === Gera ID único do pedido ===
-                var idPedido = "PD-" + new Date().toISOString().replace(/[-:T.Z]/g, "").slice(0,12);
+            async function sendToGoogleSheets(dadosPedido) {
+            const url = "https://script.google.com/macros/s/AKfycbzam3e0NjpzaG30nih5bLrfJGjh8ErzfWsrmYHWA4DEptljIKEPn3aXi4ir4nll22by/exec"; // Substitua pela URL publicada
 
-                // === Monta dados para a planilha ===
-                var pedidoData = {
-                    id_pedido: idPedido,
-                    data1: new Date().toLocaleDateString("pt-BR"),
-                    nome: typeof clientName !== "undefined" ? clientName : "",
-                    telefone: typeof clientPhone !== "undefined" ? clientPhone : "",
-                    retirada_entrega: retiradaEntrega,
-                    endereco: endereco,
-                    loja: loja,
-                    status: "novo",
-                    itens: []
-                };
-
-                // Percorre o carrinho e adiciona cada item
-                cart.forEach(function(item) {
-                    pedidoData.itens.push({
-                        id_produto: item.id,
-                        quantidade: item.quantity,
-                        valor: item.preco
-                    });
-                });
-
-                // === Envia para o Google Sheets ===
-                fetch("https://script.google.com/macros/s/AKfycbziFqqlbZJulO0H49DmbcVW8npmVVcqbUalzeMSrUXsZxMQKVkDR9p-zXXuTu0HKK0o/exec", {
+            try {
+                const response = await fetch(url, {
                     method: "POST",
+                    body: JSON.stringify(dadosPedido),
                     headers: {
                         "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(pedidoData)
-                })
-                .then(res => res.json())
-                .then(res => console.log("Resposta planilha:", res))
-                .catch(err => console.error("Erro ao enviar para planilha:", err));
+                    }
+                });
+                const result = await response.json();
+                console.log("Envio Google Sheets:", result);
+            } catch (error) {
+                console.error("Erro ao enviar para Google Sheets:", error);
+            }
+        }
 
-                // === Limpeza pós-envio ===
-                cart.length = 0;
+             //função que envia dados para whatsapp
+            function sendWhatsApp(message) {
+                const numeroWhatsApp = "5547989159449"; // Número padrão (altere se necessário)
+                
+                window.open(`https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(message)}`, '_blank');
+                
+                // Limpeza pós-envio
+                cart.length = 0
                 updateCart();
+                               
+
                 document.querySelectorAll('[id$="-modal"], [id$="-form"]').forEach(el => el.remove());
             }
-
 
             // ========== [FIM DAS FUNÇÕES] ========== //
 
@@ -1086,7 +1096,18 @@ return `• ${item.quantity}x ${item.nome} (R$ ${unit}) = R$ ${subtotal}`;
         closeCartButton.addEventListener('click', closeCart);
         cartOverlay.addEventListener('click', closeCart);
         continueShoppingButton.addEventListener('click', closeCart);
-        checkoutButton.addEventListener('click', showCustomerModal);
+        checkoutButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (cart.length === 0) {
+                alert("🛒 Seu carrinho está vazio!");
+                return;
+            }
+            // Gera ID único baseado no timestamp
+            const shortId = new Date().getTime().toString(36);
+            pedidoIdAtual = shortId;
+            showCustomerModal();
+        });
+
 
         // Adiciona ao escopo global para ser acessível nos botões dos produtos
         window.addToCart = addToCart;
@@ -1517,7 +1538,11 @@ return `• ${item.quantity}x ${item.nome} (R$ ${unit}) = R$ ${subtotal}`;
                     alert("🛒 Seu carrinho está vazio!");
                     return;
                 }
-                showCustomerModal(); // Isso inicia o fluxo completo
+                // Gera um ID único para o pedido
+                    const shortId = new Date().getTime().toString(36);
+                    pedidoIdAtual = `Id_Pedido: ${shortId}`;
+                // Isso inicia o fluxo completo
+                showCustomerModal(); 
             });
             // ===== FIM ===== //
             
@@ -1538,9 +1563,6 @@ return `• ${item.quantity}x ${item.nome} (R$ ${unit}) = R$ ${subtotal}`;
 
 </body>
 </html>
-
-
-
 
 
 
